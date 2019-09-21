@@ -1,6 +1,6 @@
 const { ipcMain, globalShortcut, app, BrowserWindow } = require("electron");
 const tempWrite = require("temp-write");
-const uniqid = require("uniqid");
+const cryptoRandomString = require("crypto-random-string");
 const Positioner = require("electron-positioner");
 const fs = require("fs");
 const exceptionFormatter = require("exception-formatter");
@@ -11,7 +11,7 @@ module.exports = class Alert {
 	constructor(head, devTools) {
 		this.head = head;
 		this.devTools = devTools;
-		this.uid = uniqid();
+		this.uid = cryptoRandomString({ length: 10 });
 		this.browserWindow = null;
 		this.position = "center";
 		this._isVisible = false;

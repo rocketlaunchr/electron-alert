@@ -29,7 +29,7 @@ export default [
 		},
 		external: [
 			"electron",
-			"uniqid",
+			"crypto-random-string",
 			"electron-positioner",
 			"temp-write",
 			"exception-formatter"
@@ -75,7 +75,7 @@ export default [
 		},
 		external: [
 			"electron",
-			"uniqid",
+			"crypto-random-string",
 			"electron-positioner",
 			"temp-write",
 			"exception-formatter"
