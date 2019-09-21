@@ -1,6 +1,6 @@
 {
   "name": "electron-alert",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SweetAlert2 for Electron Applications",
   "main": "dist/alert.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "uniqid": "^5.0.3"
   },
   "peerDependencies": {
-    "electron": "^4.0.0"
+    "electron": ">=4.0.0"
   },
   "files": [
     "dist/alert.js",

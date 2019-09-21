@@ -17,7 +17,9 @@
 
 ### Documentation
 
--   https://electron.guide/electron-alert/
+-   https://electron.guide/electron-alert
+
+⭐ The project to show your appreciation.
 
 ### Legal Information
 

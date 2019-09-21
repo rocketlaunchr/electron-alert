@@ -11,7 +11,14 @@ export default [
 			sourcemap: false
 		},
 		external: ["electron"],
-		plugins: []
+		plugins: [
+			terser({
+				ecma: 6,
+				mangle: {
+					reserved: ["uid", "sound", "config", "_sound", "_config"]
+				}
+			})
+		]
 	},
 	{
 		input: "src/alert.js",

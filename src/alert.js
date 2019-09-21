@@ -328,23 +328,7 @@ module.exports = class Alert {
     <html>
       <head>
 		<script type="text/javascript"><@insert-swal-lib@></script>
-		<style>
-			.noselect {
-				-webkit-touch-callout: none;
-				user-select: none;
-				-webkit-user-select: none;
-				-webkit-app-region: no-drag;
-			}
-
-			.no-drag {
-				-webkit-app-region: no-drag;
-			}
-
-			.border-radius-0 {
-  				border-radius: 0;
-			}
-        </style>
-
+		<style>.noselect{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;-webkit-app-region:no-drag}.no-drag{-webkit-app-region:no-drag}.border-radius-0{border-radius:0}</style>
         ${Array.isArray(head) ? head.join("\n") : ""}
       </head>
       <body draggable="false" class="noselect" ${
@@ -497,7 +481,7 @@ module.exports = class Alert {
 				inlineStyle: true
 			});
 
-			let alert = new Alert([], true);
+			let alert = new Alert([], false);
 
 			let swalOptions = {
 				type: "error"
