@@ -19,7 +19,7 @@
 
 -   https://electron.guide/electron-alert
 
-⭐ The project to show your appreciation.
+⭐ **the project to show your appreciation.**
 
 ### Legal Information
 
