@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://electron.guide/electron-alert/">
-    <img src="/assets/example.gif" width="562"><br>
+    <img src="/assets/example2.gif"><br>
     See ElectronAlert in action ↗
   </a>
 </p>
