@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://electron.guide/electron-alert/">
-    <img src="/assets/example2.gif"><br>
+    <img src="/assets/example.gif"><br>
     See ElectronAlert in action ↗
   </a>
 </p>
@@ -23,6 +23,6 @@
 
 ### Legal Information
 
-The license is a modified MIT license. Refer to `LICENSE` file for more details.
+MIT license. Refer to `LICENSE` file for more details.
 
 **© 2019 PJ Engineering and Business Solutions Pty. Ltd.**

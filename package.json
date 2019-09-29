@@ -14,7 +14,7 @@
     "sweetalert2"
   ],
   "author": "rocketlaunchr.cloud",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/rocketlaunchr/electron-alert/issues"
   },
