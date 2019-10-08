@@ -324,7 +324,9 @@ module.exports = class Alert {
 			delete swalOptions.position;
 		}
 
-		new Positioner(this.browserWindow).move(this.position);
+		if (!(isMac && (parent !== undefined && parent !== null))) {
+			new Positioner(this.browserWindow).move(this.position);
+		}
 
 		let html = String.raw`
     <html>
@@ -370,7 +372,9 @@ module.exports = class Alert {
 		}
 
 		this.browserWindow.once("ready-to-show", () => {
-			new Positioner(this.browserWindow).move(this.position);
+			if (!(isMac && (parent !== undefined && parent !== null))) {
+				new Positioner(this.browserWindow).move(this.position);
+			}
 			this.browserWindow.show();
 		});
 
@@ -380,7 +384,9 @@ module.exports = class Alert {
 		});
 
 		ipcMain.on(uid + "reposition", (event, arg) => {
-			new Positioner(this.browserWindow).move(this.position);
+			if (!(isMac && (parent !== undefined && parent !== null))) {
+				new Positioner(this.browserWindow).move(this.position);
+			}
 		});
 
 		// Callbacks

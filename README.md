@@ -15,11 +15,25 @@
   </a>
 </p>
 
+### Features
+
+-   Standard and Frameless alerts that are visually stunning
+-   Toasts with timers
+-   Exception handling alert
+-   Sounds
+-   SweetAlert2-esque API\*
+
 ### Documentation
 
 -   https://electron.guide/electron-alert
 
+Please issue a PR if you discover a bug or wish to add a feature!
+
 ⭐ **the project to show your appreciation.**
+
+### Community Projects
+
+If you use ElectronAlert in your project, add it here.
 
 ### Legal Information
 
