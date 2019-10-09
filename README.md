@@ -15,6 +15,8 @@
   </a>
 </p>
 
+⭐ **the project to show your appreciation.**
+
 ### Features
 
 -   Standard and Frameless alerts that are visually stunning
@@ -22,8 +24,6 @@
 -   Exception handling alert
 -   Sounds
 -   SweetAlert2-esque API\*
-
-⭐ **the project to show your appreciation.**
 
 ### Documentation
 
