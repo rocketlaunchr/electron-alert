@@ -23,13 +23,13 @@
 -   Sounds
 -   SweetAlert2-esque API\*
 
+⭐ **the project to show your appreciation.**
+
 ### Documentation
 
 -   https://electron.guide/electron-alert
 
 Please issue a PR if you discover a bug or wish to add a feature!
-
-⭐ **the project to show your appreciation.**
 
 ### Community Projects
 
