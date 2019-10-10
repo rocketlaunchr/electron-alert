@@ -6,10 +6,11 @@ const cryptoRandomString = require("crypto-random-string");
 const Positioner = require("electron-positioner");
 const fs = require("fs");
 const exceptionFormatter = require("exception-formatter");
+const DismissReason = require("./DismissReason.js");
 
 var isMac = process.platform === "darwin";
 
-module.exports = class Alert {
+class Alert {
 	constructor(head, devTools) {
 		this.head = head;
 		this.devTools = devTools;
@@ -232,7 +233,7 @@ module.exports = class Alert {
 		//      `
 		//    ];
 
-		let alert = new Alert();
+		let alert = new this();
 		swalOptions.toast = true;
 		// swalOptions.onOpen = el => {
 		// alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
@@ -466,6 +467,7 @@ module.exports = class Alert {
 		return new Promise((resolve, reject) => {
 			ipcMain.once(uid + "return-promise", (event, arg) => {
 				resolve(arg);
+				console.log('Okay, I want to see this arg: ' + JSON.stringify(arg));
 			});
 		});
 	}
@@ -523,4 +525,8 @@ module.exports = class Alert {
 			// alert.fireFrameless(swalOptions, undefined, alwaysOnTop, true);
 		};
 	}
-};
+}
+
+Alert.DismissReason = DismissReason;
+
+module.exports = Alert;

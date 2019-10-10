@@ -21,9 +21,9 @@ export default [
 		]
 	},
 	{
-		input: "src/alert.js",
+		input: "src/Alert.js",
 		output: {
-			file: "dist/alert.js",
+			file: "dist/Alert.js",
 			format: "cjs",
 			sourcemap: false
 		},
@@ -36,12 +36,12 @@ export default [
 		],
 		plugins: [
 			stringReplace(
-				"./dist/alert.js",
+				"./dist/Alert.js",
 				/<@insert-renderer@>/,
 				"./dist/renderer.js"
 			),
 			stringReplace(
-				"./dist/alert.js",
+				"./dist/Alert.js",
 				/<@insert-swal-lib@>/,
 				"node_modules/sweetalert2/dist/sweetalert2.all.min.js"
 			),
@@ -67,9 +67,9 @@ export default [
 		]
 	},
 	{
-		input: "src/alert.js",
+		input: "src/Alert.js",
 		output: {
-			file: "dist/alert.min.js",
+			file: "dist/Alert.min.js",
 			format: "cjs",
 			sourcemap: false
 		},
@@ -88,12 +88,12 @@ export default [
 				}
 			}),
 			stringReplace(
-				"./dist/alert.min.js",
+				"./dist/Alert.min.js",
 				/<@insert-renderer@>/,
 				"./dist/renderer.min.js"
 			),
 			stringReplace(
-				"./dist/alert.min.js",
+				"./dist/Alert.min.js",
 				/<@insert-swal-lib@>/,
 				"node_modules/sweetalert2/dist/sweetalert2.all.min.js"
 			),
