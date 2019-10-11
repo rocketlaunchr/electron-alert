@@ -1,22 +1,41 @@
-const { ipcMain, globalShortcut, app, BrowserWindow } = require("electron");
+"use strict";
+
+const {
+	ipcMain,
+	globalShortcut,
+	app,
+	BrowserWindow
+} = require("electron");
 const tempWrite = require("temp-write");
 const cryptoRandomString = require("crypto-random-string");
 const Positioner = require("electron-positioner");
 const fs = require("fs");
 const exceptionFormatter = require("exception-formatter");
+const DismissReason = Object.freeze({
+	cancel: "cancel",
+	close: "close",
+	esc: "esc",
+	timer: "timer"
+}); // require("./DismissReason.js");
 
 var isMac = process.platform === "darwin";
 
-module.exports = class Alert {
+class Alert {
 	constructor(head, devTools) {
 		this.head = head;
 		this.devTools = devTools;
-		this.uid = cryptoRandomString({ length: 10 });
+		this.uid = cryptoRandomString({
+			length: 10
+		});
 		this.browserWindow = null;
 		this.position = "center";
 		this._isVisible = false;
 	}
 
+	static get DismissReason() {
+		return DismissReason;
+	}
+ 
 	isVisible() {
 		return this._isVisible;
 	}
@@ -62,27 +81,18 @@ module.exports = class Alert {
 
 	showValidationMessage(validationMessage) {
 		//: void
-		this.execJS(
-			`Swal.showValidationMessage('${validationMessage}')`,
-			() => {
-				if (this.browserWindow) {
-					this.browserWindow.webContents.send(
-						`${this.uid}resizeToFit`,
-						25
-					);
-				}
+		this.execJS(`Swal.showValidationMessage('${validationMessage}')`, () => {
+			if (this.browserWindow) {
+				this.browserWindow.webContents.send(`${this.uid}resizeToFit`, 25);
 			}
-		);
+		});
 	}
 
 	resetValidationMessage() {
 		//: void;
 		this.execJS(`Swal.resetValidationMessage()`, () => {
 			if (this.browserWindow) {
-				this.browserWindow.webContents.send(
-					`${this.uid}resizeToFit`,
-					25
-				);
+				this.browserWindow.webContents.send(`${this.uid}resizeToFit`, 25);
 			}
 		});
 	}
@@ -151,14 +161,23 @@ module.exports = class Alert {
 		return this.execJS(`isUpdatableParameter('${paramName}')`);
 	}
 
-	fireFrameless(swalOptions, parent, alwaysOnTop, draggable, sound, size) {
+	fireFrameless(options) {
+		if (options.constructor !== Object)
+			throw new Error(`${options} is not an object. Options object expected as param.`);
+
+		let swalOptions = options.swalOptions ? options.swalOptions : {
+			...options
+		};
+		options = options.swalOptions ? options : {};
+		let size = options.size;
 		let bwOptions = {
 			frame: false,
 			transparent: true,
 			thickFrame: false,
 			closable: false,
 			backgroundColor: "#00000000",
-			hasShadow: false
+			hasShadow: false,
+			...options.bwOptions
 		};
 
 		bwOptions = bwOptions;
@@ -174,49 +193,62 @@ module.exports = class Alert {
 			}
 		}
 
-		return this.fire(
-			swalOptions,
-			bwOptions,
-			parent,
-			alwaysOnTop,
-			draggable,
-			sound
-		);
+		return this.fire({
+			swalOptions: swalOptions,
+			bwOptions: bwOptions,
+			parent: options.parent,
+			alwaysOnTop: options.alwaysOnTop,
+			draggagle: options.draggable,
+			sound: options.sound
+		});
 	}
 
-	fireWithFrame(swalOptions, title, parent, alwaysOnTop, sound, size) {
+	fireWithFrame(options) {
+		if (options.constructor !== Object)
+			throw new Error(`${options} is not an object. Options object expected as param.`);
+
+		let swalOptions = options.swalOptions ? options.swalOptions : {
+			...options
+		};
+		options = options.swalOptions ? options : {};
+		let title = options.title;
+		let size = options.size;
 		let bwOptions = {
 			frame: true,
 			transparent: false,
 			thickFrame: true,
 			closable: true,
-			title: title ? title : app.getName()
+			title: title ? title : app.getName(),
+			...options.bwOptions
 		};
 
-		bwOptions = bwOptions;
+		// bwOptions = bwOptions;
 		swalOptions.allowOutsideClick = false;
 		swalOptions.animation = false;
 
 		if (size !== undefined) {
-			if (size.hasOwnProperty("width")) {
-				bwOptions.width = size.width;
-			}
-			if (size.hasOwnProperty("height")) {
-				bwOptions.height = size.height;
-			}
+			if (size.hasOwnProperty("width")) bwOptions.width = size.width;
+			if (size.hasOwnProperty("height")) bwOptions.height = size.height;
 		}
 
 		swalOptions.customClass = Object.assign(
-			swalOptions.customClass ? swalOptions.customClass : {},
-			{
+			swalOptions.customClass ? swalOptions.customClass : {}, {
 				popup: "border-radius-0"
 			}
 		);
 
-		return this.fire(swalOptions, bwOptions, parent, alwaysOnTop, sound);
+		return this.fire({
+			swalOptions: swalOptions,
+			bwOptions: bwOptions,
+			parent: options.parent,
+			alwaysOnTop: options.alwaysOnTop,
+			sound: options.sound
+		});
 	}
 
-	static fireToast(swalOptions, sound, size) {
+	static fireToast(options) {
+		if (options.constructor !== Object)
+			throw new Error(`${options} is not an object. Options object expected as param.`);
 		// Animation: https://github.com/electron/electron/issues/2407
 		// https://stackoverflow.com/questions/54413142/how-can-i-modify-sweetalert2s-toast-animation-settings
 
@@ -229,11 +261,17 @@ module.exports = class Alert {
 		//              </style>
 		//      `
 		//    ];
+		let swalOptions = options.swalOptions ? options.swalOptions : {
+			...options
+		};
+		options = options.swalOptions ? options : {};
+		let sound = options.sound;
+		let size = options.size;
 
-		let alert = new Alert();
+		let alert = new this();
 		swalOptions.toast = true;
 		// swalOptions.onOpen = el => {
-		// alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
+		//   alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
 		// };
 
 		let bwOptions = {};
@@ -246,17 +284,30 @@ module.exports = class Alert {
 			}
 		}
 
-		let ret = alert.fireFrameless(
-			swalOptions,
-			bwOptions,
-			true,
-			false,
-			sound
-		);
-		return ret;
+		return alert.fireFrameless({
+			swalOptions: swalOptions,
+			bwOptions: bwOptions,
+			parent: true,
+			alwaysOnTop: false,
+			sound: sound
+		});
 	}
 
-	fire(swalOptions, bwOptions, parent, alwaysOnTop, draggable, sound) {
+	fire(options) {
+		if (options.constructor !== Object)
+			throw new Error(`${options} is not an object. Options object expected as param.`); 
+
+		let swalOptions = options.swalOptions ? options.swalOptions : {
+			...options
+		};
+
+		options = options.swalOptions ? options : {};
+
+		let bwOptions = options.bwOptions ? options.bwOptions : {};
+		let parent = options.parent;
+		let alwaysOnTop = options.alwaysOnTop;
+		let draggable = options.draggable;
+		let sound = options.sound;
 		// Create a unique id
 		let uid = this.uid,
 			head = this.head;
@@ -281,20 +332,19 @@ module.exports = class Alert {
 
 		// Force these settings
 		if (parent !== undefined && parent !== null) {
-			bwOptionsFinal["parent"] = parent;
-			bwOptionsFinal["modal"] = true;
+			bwOptionsFinal.parent = parent;
+			bwOptionsFinal.modal = true;
 		}
 		bwOptionsFinal.webPreferences.nodeIntegration = true;
 		bwOptionsFinal.skipTaskbar = true;
 
 		if (alwaysOnTop !== undefined) {
-			bwOptionsFinal["alwaysOnTop"] = alwaysOnTop;
+			bwOptionsFinal.alwaysOnTop = alwaysOnTop;
 		}
 
 		if (draggable === true) {
 			swalOptions.customClass = Object.assign(
-				swalOptions.customClass ? swalOptions.customClass : {},
-				{
+				swalOptions.customClass ? swalOptions.customClass : {}, {
 					closeButton: "no-drag",
 					confirmButton: "no-drag",
 					cancelButton: "no-drag",
@@ -326,7 +376,7 @@ module.exports = class Alert {
 			new Positioner(this.browserWindow).move(this.position);
 		}
 
-		let html = String.raw`
+		let html = String.raw `
     <html>
       <head>
 		<script type="text/javascript"><@insert-swal-lib@></script>
@@ -334,8 +384,8 @@ module.exports = class Alert {
         ${Array.isArray(head) ? head.join("\n") : ""}
       </head>
       <body draggable="false" class="noselect" ${
-			draggable === true ? 'style="-webkit-app-region:drag"' : ""
-		}></body>
+        draggable === true ? 'style="-webkit-app-region:drag"' : ""
+      }></body>
       <script type="text/javascript">
       let _sound = ${JSON.stringify(sound)}
       let _config = ${JSON.stringify(swalOptions)}
@@ -375,9 +425,9 @@ module.exports = class Alert {
 		});
 
 		// For debugging only. Remove ASAP.
-		ipcMain.on(uid + "log", (event, arg) => {
-			console.log("from renderer: ", arg);
-		});
+		// ipcMain.on(uid + "log", (event, arg) => {
+		// 	console.log("from renderer: ", arg);
+		// });
 
 		ipcMain.on(uid + "reposition", (event, arg) => {
 			if (!(isMac && (parent !== undefined && parent !== null))) {
@@ -496,7 +546,7 @@ module.exports = class Alert {
 			if (hideTrace !== true) {
 				swalOptions.html = `
 				<div contenteditable="false" style="overflow:auto">
-				${html}
+			  ${html}
 				</div>
 				`;
 			} else {
@@ -504,19 +554,20 @@ module.exports = class Alert {
 			}
 
 			if (closure) {
-				swalOptions["onAfterClose"] = () => {
+				swalOptions.onAfterClose = () => {
 					closure(error);
 				};
 			}
 
-			alert.fireWithFrame(
-				swalOptions,
-				error.name,
-				undefined,
-				alwaysOnTop
-			);
-
+			alert.fireWithFrame({
+				swalOptions: swalOptions,
+				title: error.name,
+				alwaysOnTop: alwaysOnTop
+			});
+			// alert.fireWithFrame(swalOptions, error.name, undefined, alwaysOnTop);
 			// alert.fireFrameless(swalOptions, undefined, alwaysOnTop, true);
 		};
 	}
-};
+}
+
+module.exports = Alert;
