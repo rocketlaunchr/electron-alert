@@ -7,13 +7,11 @@ declare module 'electron-alert' {
    *   const Alert = require('electron-alert');
    *   const alert = new Alert();
    * 
-   *   alert.fireFrameless(
-   *     swalOptions: {
-   *       title: 'Hey user!',
-   *       text: 'How are you today?',
-   *       type: 'question'
-   *     }
-   *   };
+   *   alert.fireFrameless({
+   *     title: 'Hey user!',
+   *     text: 'How are you today?',
+   *     type: 'question'
+   *   });
    */
   namespace Alert {
     /**
@@ -23,12 +21,11 @@ declare module 'electron-alert' {
      * ex.
      *   const Alert = require('electron-alert');
      *   const alert = new Alert();
+     * 
      *   alert.fireFrameless({
-     *     swalOptions: {
-     *       title: 'Auto close alert!',
-     *       text: 'I will close in 2 seconds.',
-     *       timer: 2000
-     *     }
+     *     title: 'Auto close alert!',
+     *     text: 'I will close in 3 seconds.',
+     *     timer: 3000
      *   })
      */
     function fireFrameless(options: SweetAlertOptions | ElectronAlertOptions): Promise<SweetAlertResult>;
@@ -36,21 +33,50 @@ declare module 'electron-alert' {
     /**
      * Function to display a frameless ElectronAlert modal, with an object of options, all being optional.
      * See the ElectronAlertOptions interface for the list of accepted fields and values.
-     * @param options 
+     * 
+     * ex.
+     *   const Alert = require('electron-alert');
+     *   const alert = new Alert();
+     * 
+     *   alert.fireWithFrame({
+     *     swalOptions: {
+     *       title: 'Alert with frame!',
+     *       text: 'This alert modal is fired with frame.',
+     *     },
+     *     title: 'Custom Title'
+     *   })
      */
     function fireWithFrame(options: SweetAlertOptions | ElectronAlertOptions): Promise<SweetAlertResult>
 
     /**
-     * Function to display an ElectronAlert toast, with an object of options, all being optional.
+     * Static function to display an ElectronAlert toast, with an object of options, all being optional.
      * See the ElectronAlertOptions interface for the list of accepted fields and values.
-     * @param options
+     * 
+     * ex.
+     *   const Alert = require('electron-alert');
+     * 
+     *   Alert.fireToast({
+     *     title: 'Logged on as User',
+     *     timer: 3000,
+     *     position: "top-end",
+     *     showConfirmButton: false
+     *   });
      */
     function fireToast(options: SweetAlertOptions | ElectronAlertOptions): Promise<SweetAlertResult>
 
     /**
-     * Function to display an uncaught exception ElectronAlert modal with a list of option parameters, all being optional.
-     * See the ElectronAlertOptions interface for the list of accepted fields and values.
-     * @param options
+     * Static function to display an uncaught exception ElectronAlert modal with a list of option parameters, all being optional.
+     * 
+     * ex:
+     *   const Alert = require('electron-alert');
+     * 
+     *   process.on(
+     *     "uncaughtException",
+     *     Alert.uncaughtException(false, err => {
+     *       console.error("Uncaught Exception:", err);
+     *       process.exit(1);
+     *     })
+     *   );
      */
     function uncaughtException(hideTrace?: boolean, closure?: function, alwaysOnTop?: boolean): Promise<SweetAlertResult>
 
@@ -208,12 +234,12 @@ declare module 'electron-alert' {
     /**
      * @default null
      */
-    bwOptions?: any;
+    bwOptions?: BrowserWindowOptions;
     
     /**
      * @default null
      */
-    title?: string | HTMLElement;
+    title?: string;
 
     /**
      * @default false
@@ -233,7 +259,7 @@ declare module 'electron-alert' {
     /**
      * @default null
      */
-    sound?: any;
+    sound?: object;
   }
 
   export type SweetAlertType = 'success' | 'error' | 'warning' | 'info' | 'question';
@@ -819,12 +845,11 @@ declare module 'electron-alert' {
     scrollbarPadding?: boolean;
   }
 
-  module.exports = Alert;
+  export default Alert;
 }
 
 declare module 'electron-alert/dist/Alert.js' {
   export * from 'electron-alert'
-  require('electron-alert') || require('dist/Alert.js');
   // "export *" does not matches the default export, so do it explicitly.
   export { default } from 'electron-alert' // eslint-disable-line
 }

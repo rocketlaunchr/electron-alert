@@ -42,11 +42,11 @@ function playsound(type, freq, duration) {
 	g.gain.exponentialRampToValueAtTime(
 		0.00001,
 		context.currentTime + duration
-	);
+	); 
 } 
  
-// callbacks
-config.onBeforeOpen = modalElement => {
+// callbacks 
+config.onBeforeOpen = modalElement => { 
 	ipcRenderer.send("${uid}onBeforeOpen", modalElement);
 	ipcRenderer.on("${uid}showLoading", () => Swal.showLoading());
 

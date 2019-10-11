@@ -16,7 +16,7 @@ const DismissReason = Object.freeze({
 	close: "close",
 	esc: "esc",
 	timer: "timer"
-}); // require("./DismissReason.js");
+});
 
 var isMac = process.platform === "darwin";
 
@@ -35,7 +35,7 @@ class Alert {
 	static get DismissReason() {
 		return DismissReason;
 	}
- 
+
 	isVisible() {
 		return this._isVisible;
 	}
@@ -159,9 +159,29 @@ class Alert {
 		paramName //: promise => boolean;
 	) {
 		return this.execJS(`isUpdatableParameter('${paramName}')`);
-	}
+	} 
 
-	fireFrameless(options) {
+	/**
+	 * 
+	 * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.  
+	 * 
+	 *   __Possible `options` for type `SweetAlertOptions`:__  
+	 *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;  
+	 * 
+	 *   __Possible `options` for type `ElectronAlertOptions`:__  {
+	 *   > `swalOptions`?: SweetAlertOptions,  
+	 *     `bwOptions`?: BrowserWindowOptions,  
+	 *     `title`?: string,  
+	 *     `parent`?: boolean,  
+	 *     `alwaysOnTop`?: boolean,  
+	 *     `sound`?: object  
+	 * 
+	 *   };  
+	 * 
+	 * __Note:__  
+	 * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
+	 */
+	fireFrameless(options) { 
 		if (options.constructor !== Object)
 			throw new Error(`${options} is not an object. Options object expected as param.`);
 
@@ -203,6 +223,27 @@ class Alert {
 		});
 	}
 
+ /**
+	 * 
+	 * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.  
+	 * 
+	 *   __Possible `options` for type `SweetAlertOptions`:__  
+	 *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;  
+	 * 
+	 *   __Possible `options` for type `ElectronAlertOptions`:__  {
+	 *   > `swalOptions`?: SweetAlertOptions,  
+	 *     `bwOptions`?: BrowserWindowOptions,  
+	 *     `title`?: string,  
+	 *     `parent`?: boolean,  
+	 *     `alwaysOnTop`?: boolean,  
+	 *     `draggable`?: boolean,  
+	 *     `sound`?: object  
+	 * 
+	 *   };  
+	 * 
+	 * __Note:__  
+	 * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
+	 */
 	fireWithFrame(options) {
 		if (options.constructor !== Object)
 			throw new Error(`${options} is not an object. Options object expected as param.`);
@@ -246,7 +287,28 @@ class Alert {
 		});
 	}
 
-	static fireToast(options) {
+	/**
+	 * 
+	 * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.  
+	 * 
+	 *   __Possible `options` for type `SweetAlertOptions`:__  
+	 *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;  
+	 * 
+	 *   __Possible `options` for type `ElectronAlertOptions`:__  {
+	 *   > `swalOptions`?: SweetAlertOptions,  
+	 *     `bwOptions`?: BrowserWindowOptions,  
+	 *     `title`?: string,  
+	 *     `parent`?: boolean,  
+	 *     `alwaysOnTop`?: boolean,  
+	 *     `draggable`?: boolean,  
+	 *     `sound`?: object  
+	 * 
+	 *   };  
+	 * 
+	 * __Note:__  
+	 * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
+	 */
+	static fireToast(options) { 
 		if (options.constructor !== Object)
 			throw new Error(`${options} is not an object. Options object expected as param.`);
 		// Animation: https://github.com/electron/electron/issues/2407
@@ -295,7 +357,7 @@ class Alert {
 
 	fire(options) {
 		if (options.constructor !== Object)
-			throw new Error(`${options} is not an object. Options object expected as param.`); 
+			throw new Error(`${options} is not an object. Options object expected as param.`);
 
 		let swalOptions = options.swalOptions ? options.swalOptions : {
 			...options
@@ -517,11 +579,8 @@ class Alert {
 	}
 
 	execJS(javascript, callback) {
-		if (this.browserWindow === null) {
-			return new Promise(resolve => {
-				resolve();
-			});
-		}
+		if (this.browserWindow === null)
+			return new Promise(resolve => resolve());
 
 		return this.browserWindow.webContents.executeJavaScript(
 			javascript,
@@ -530,34 +589,36 @@ class Alert {
 		);
 	}
 
-	static uncaughtException(hideTrace, closure, alwaysOnTop) {
+		/**
+	 * 
+	 * @param { boolean } hideTrace
+	 * @param { function } closure
+	 * @param { boolean } alwaysOnTop
+	 */
+	static uncaughtException(hideTrace, closure, alwaysOnTop) { 
 		return error => {
 			let html = exceptionFormatter(error, {
 				format: "html",
 				inlineStyle: true
-			});
-
+			}); 
 			let alert = new Alert([], false);
-
-			let swalOptions = {
-				type: "error"
-			};
+			let swalOptions = { type: "error" };
 
 			if (hideTrace !== true) {
 				swalOptions.html = `
-				<div contenteditable="false" style="overflow:auto">
-			  ${html}
-				</div>
-				`;
-			} else {
-				swalOptions.title = error.message;
-			}
+				  <div class='wrapper' style='overflow: auto'>
+						${html.replace(/nowrap/g, '')}
+					</div>
+					<style>
+						.wrapper > div {
+							word-break: break-word;
+						}
+					</style>`;
+			} 
+			else swalOptions.title = error.message; 
 
-			if (closure) {
-				swalOptions.onAfterClose = () => {
-					closure(error);
-				};
-			}
+			if (closure)
+				swalOptions.onAfterClose = () => closure(error);
 
 			alert.fireWithFrame({
 				swalOptions: swalOptions,

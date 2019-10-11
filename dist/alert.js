@@ -16,7 +16,7 @@ const DismissReason = Object.freeze({
 	close: "close",
 	esc: "esc",
 	timer: "timer"
-}); // require("./DismissReason.js");
+});
 
 var isMac = process.platform === "darwin";
 
@@ -35,7 +35,7 @@ class Alert {
 	static get DismissReason() {
 		return DismissReason;
 	}
- 
+
 	isVisible() {
 		return this._isVisible;
 	}
@@ -159,9 +159,29 @@ class Alert {
 		paramName //: promise => boolean;
 	) {
 		return this.execJS(`isUpdatableParameter('${paramName}')`);
-	}
+	} 
 
-	fireFrameless(options) {
+	/**
+	 * 
+	 * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.  
+	 * 
+	 *   __Possible `options` for type `SweetAlertOptions`:__  
+	 *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;  
+	 * 
+	 *   __Possible `options` for type `ElectronAlertOptions`:__  {
+	 *   > `swalOptions`?: SweetAlertOptions,  
+	 *     `bwOptions`?: BrowserWindowOptions,  
+	 *     `title`?: string,  
+	 *     `parent`?: boolean,  
+	 *     `alwaysOnTop`?: boolean,  
+	 *     `sound`?: object  
+	 * 
+	 *   };  
+	 * 
+	 * __Note:__  
+	 * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
+	 */
+	fireFrameless(options) { 
 		if (options.constructor !== Object)
 			throw new Error(`${options} is not an object. Options object expected as param.`);
 
@@ -203,6 +223,27 @@ class Alert {
 		});
 	}
 
+ /**
+	 * 
+	 * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.  
+	 * 
+	 *   __Possible `options` for type `SweetAlertOptions`:__  
+	 *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;  
+	 * 
+	 *   __Possible `options` for type `ElectronAlertOptions`:__  {
+	 *   > `swalOptions`?: SweetAlertOptions,  
+	 *     `bwOptions`?: BrowserWindowOptions,  
+	 *     `title`?: string,  
+	 *     `parent`?: boolean,  
+	 *     `alwaysOnTop`?: boolean,  
+	 *     `draggable`?: boolean,  
+	 *     `sound`?: object  
+	 * 
+	 *   };  
+	 * 
+	 * __Note:__  
+	 * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
+	 */
 	fireWithFrame(options) {
 		if (options.constructor !== Object)
 			throw new Error(`${options} is not an object. Options object expected as param.`);
@@ -246,7 +287,28 @@ class Alert {
 		});
 	}
 
-	static fireToast(options) {
+	/**
+	 * 
+	 * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.  
+	 * 
+	 *   __Possible `options` for type `SweetAlertOptions`:__  
+	 *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;  
+	 * 
+	 *   __Possible `options` for type `ElectronAlertOptions`:__  {
+	 *   > `swalOptions`?: SweetAlertOptions,  
+	 *     `bwOptions`?: BrowserWindowOptions,  
+	 *     `title`?: string,  
+	 *     `parent`?: boolean,  
+	 *     `alwaysOnTop`?: boolean,  
+	 *     `draggable`?: boolean,  
+	 *     `sound`?: object  
+	 * 
+	 *   };  
+	 * 
+	 * __Note:__  
+	 * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
+	 */
+	static fireToast(options) { 
 		if (options.constructor !== Object)
 			throw new Error(`${options} is not an object. Options object expected as param.`);
 		// Animation: https://github.com/electron/electron/issues/2407
@@ -295,7 +357,7 @@ class Alert {
 
 	fire(options) {
 		if (options.constructor !== Object)
-			throw new Error(`${options} is not an object. Options object expected as param.`); 
+			throw new Error(`${options} is not an object. Options object expected as param.`);
 
 		let swalOptions = options.swalOptions ? options.swalOptions : {
 			...options
@@ -390,7 +452,8 @@ class Alert {
       <script type="text/javascript">
       let _sound = ${JSON.stringify(sound)}
       let _config = ${JSON.stringify(swalOptions)}
-		<@insert-renderer@>
+		const{ipcRenderer:e,remote:o}=require("electron");let sound=_sound,config=_config,n=o.getCurrentWindow();config.onBeforeOpen=o=>{e.send("${uid}onBeforeOpen",o),e.on("${uid}showLoading",()=>Swal.showLoading()),void 0!==sound&&function(e,o,n){let i={C:[16.35,32.7,65.41,130.8,261.6,523.3,1047,2093,4186],"C#":[17.32,34.65,69.3,138.6,277.2,554.4,1109,2217,4435],D:[18.35,36.71,73.42,146.8,293.7,587.3,1175,2349,4699],Eb:[19.45,38.89,77.78,155.6,311.1,622.3,1245,2489,4978],E:[20.6,41.2,82.41,164.8,329.6,659.3,1319,2637,5274],F:[21.83,43.65,87.31,174.6,349.2,698.5,1397,2794,5588],"F#":[23.12,46.25,92.5,185,370,740,1480,2960,5920],G:[24.5,49,98,196,392,784,1568,3136,6272],"G#":[25.96,51.91,103.8,207.7,415.3,830.6,1661,3322,6645],A:[27.5,55,110,220,440,880,1760,3520,7040],Bb:[29.14,58.27,116.5,233.1,466.2,932.3,1865,3729,7459],B:[30.87,61.74,123.5,246.9,493.9,987.8,1976,3951,7902]};if(isNaN(o)){regexStr=o.match(/^(.+)([0-9])$/i);let e=regexStr[1].toUpperCase(),n=regexStr[2];o=i[e][n]}var t=new AudioContext,r=t.createOscillator(),d=t.createGain();r.type=e,r.connect(d),r.frequency.value=o,d.connect(t.destination),r.start(0),d.gain.exponentialRampToValueAtTime(1e-5,t.currentTime+n)}(sound.type,sound.freq,sound.duration)},config.onAfterClose=()=>{e.send("${uid}onAfterClose")},config.onOpen=o=>{let i=n.getSize()[1]-n.getContentSize()[1];o.parentNode.style.padding="0px 0px 0px 0px",window.resizeTo(o.scrollWidth,o.scrollHeight+i+1),e.send("${uid}reposition"),window.setTimeout(()=>{e.send("${uid}reposition")},25),e.send("${uid}onOpen",o),e.on("${uid}resizeToFit",e=>{void 0!==e?window.setTimeout(()=>{window.resizeTo(o.scrollWidth,o.scrollHeight+i+1)},e):window.resizeTo(o.scrollWidth,o.scrollHeight+i+1)}),e.on("${uid}hideLoading",()=>Swal.hideLoading())},config.onClose=o=>{e.send("${uid}onClose",o)},Swal.fire(config).then((function(o){e.send("${uid}return-promise",o)}));
+
 		</script>
     </html>
     `;
@@ -518,11 +581,8 @@ class Alert {
 	}
 
 	execJS(javascript, callback) {
-		if (this.browserWindow === null) {
-			return new Promise(resolve => {
-				resolve();
-			});
-		}
+		if (this.browserWindow === null)
+			return new Promise(resolve => resolve());
 
 		return this.browserWindow.webContents.executeJavaScript(
 			javascript,
@@ -531,34 +591,36 @@ class Alert {
 		);
 	}
 
-	static uncaughtException(hideTrace, closure, alwaysOnTop) {
+		/**
+	 * 
+	 * @param { boolean } hideTrace
+	 * @param { function } closure
+	 * @param { boolean } alwaysOnTop
+	 */
+	static uncaughtException(hideTrace, closure, alwaysOnTop) { 
 		return error => {
 			let html = exceptionFormatter(error, {
 				format: "html",
 				inlineStyle: true
-			});
-
+			}); 
 			let alert = new Alert([], false);
-
-			let swalOptions = {
-				type: "error"
-			};
+			let swalOptions = { type: "error" };
 
 			if (hideTrace !== true) {
 				swalOptions.html = `
-				<div contenteditable="false" style="overflow:auto">
-			  ${html}
-				</div>
-				`;
-			} else {
-				swalOptions.title = error.message;
-			}
+				  <div class='wrapper' style='overflow: auto'>
+						${html.replace(/nowrap/g, '')}
+					</div>
+					<style>
+						.wrapper > div {
+							word-break: break-word;
+						}
+					</style>`;
+			} 
+			else swalOptions.title = error.message; 
 
-			if (closure) {
-				swalOptions.onAfterClose = () => {
-					closure(error);
-				};
-			}
+			if (closure)
+				swalOptions.onAfterClose = () => closure(error);
 
 			alert.fireWithFrame({
 				swalOptions: swalOptions,
