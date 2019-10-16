@@ -43,7 +43,7 @@ function playsound(type, freq, duration) {
 		0.00001,
 		context.currentTime + duration
 	); 
-} 
+}
  
 // callbacks 
 config.onBeforeOpen = modalElement => { 
