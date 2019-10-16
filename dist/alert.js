@@ -156,26 +156,6 @@ class Alert {
     return this.execJS(`isUpdatableParameter('${paramName}')`);
   }
 
-  /**
-   *
-   * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.
-   *
-   *   __Possible `options` for type `SweetAlertOptions`:__
-   *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;
-   *
-   *   __Possible `options` for type `ElectronAlertOptions`:__  {
-   *   > `swalOptions`?: SweetAlertOptions,
-   *     `bwOptions`?: BrowserWindowOptions,
-   *     `title`?: string,
-   *     `parent`?: boolean,
-   *     `alwaysOnTop`?: boolean,
-   *     `sound`?: object
-   *
-   *   };
-   *
-   * __Note:__
-   * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
-   */
   fireFrameless(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
@@ -222,27 +202,6 @@ class Alert {
     });
   }
 
-  /**
-   *
-   * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.
-   *
-   *   __Possible `options` for type `SweetAlertOptions`:__
-   *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;
-   *
-   *   __Possible `options` for type `ElectronAlertOptions`:__  {
-   *   > `swalOptions`?: SweetAlertOptions,
-   *     `bwOptions`?: BrowserWindowOptions,
-   *     `title`?: string,
-   *     `parent`?: boolean,
-   *     `alwaysOnTop`?: boolean,
-   *     `draggable`?: boolean,
-   *     `sound`?: object
-   *
-   *   };
-   *
-   * __Note:__
-   * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
-   */
   fireWithFrame(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
@@ -291,27 +250,6 @@ class Alert {
     });
   }
 
-  /**
-   *
-   * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.
-   *
-   *   __Possible `options` for type `SweetAlertOptions`:__
-   *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;
-   *
-   *   __Possible `options` for type `ElectronAlertOptions`:__  {
-   *   > `swalOptions`?: SweetAlertOptions,
-   *     `bwOptions`?: BrowserWindowOptions,
-   *     `title`?: string,
-   *     `parent`?: boolean,
-   *     `alwaysOnTop`?: boolean,
-   *     `draggable`?: boolean,
-   *     `sound`?: object
-   *
-   *   };
-   *
-   * __Note:__
-   * If `swalOptions` is defined in `options`, function will then assume `options` (argument) to be of type `ElectronAlertOptions`, and if not of type `SweetAlertOptions`.
-   */
   static fireToast(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
@@ -603,12 +541,6 @@ class Alert {
     );
   }
 
-  /**
-   *
-   * @param { boolean } hideTrace
-   * @param { function } closure
-   * @param { boolean } alwaysOnTop
-   */
   static uncaughtException(hideTrace, closure, alwaysOnTop) {
     return error => {
       let html = exceptionFormatter(error, {
