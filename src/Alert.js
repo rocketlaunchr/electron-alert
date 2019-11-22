@@ -124,7 +124,6 @@ class Alert {
 
   isTimerRunning() {
     //: promise => boolean | undefined;
-    //method should be looked into / revisited
     return this.execJS(`Swal.isTimerRunning()`);
   }
 
@@ -179,7 +178,6 @@ class Alert {
       ...options.bwOptions
     };
 
-    bwOptions = bwOptions;
     swalOptions.backdrop = `rgba(0,0,0,0.0)`;
     swalOptions.allowOutsideClick = false;
 
@@ -225,7 +223,6 @@ class Alert {
       ...options.bwOptions
     };
 
-    // bwOptions = bwOptions;
     swalOptions.allowOutsideClick = false;
     swalOptions.animation = false;
 
@@ -272,17 +269,20 @@ class Alert {
       : {
           ...options
         };
+
     options = options.swalOptions ? options : {};
+
     let sound = options.sound;
     let size = options.size;
-
     let alert = new this();
+
     swalOptions.toast = true;
     // swalOptions.onOpen = el => {
     //   alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
     // };
 
     let bwOptions = {};
+
     if (size !== undefined) {
       if (size.hasOwnProperty("width")) {
         bwOptions.width = size.width;
@@ -385,7 +385,7 @@ class Alert {
       delete swalOptions.position;
     }
 
-    if (!(isMac && (parent !== undefined && parent !== null))) {
+    if (!(isMac && parent !== undefined && parent !== null)) {
       new Positioner(this.browserWindow).move(this.position);
     }
 
@@ -431,7 +431,7 @@ class Alert {
     }
 
     this.browserWindow.once("ready-to-show", () => {
-      if (!(isMac && (parent !== undefined && parent !== null))) {
+      if (!(isMac && parent !== undefined && parent !== null)) {
         new Positioner(this.browserWindow).move(this.position);
       }
       this.browserWindow.show();
@@ -443,7 +443,7 @@ class Alert {
     // });
 
     ipcMain.on(uid + "reposition", (event, arg) => {
-      if (!(isMac && (parent !== undefined && parent !== null))) {
+      if (!(isMac && parent !== undefined && parent !== null)) {
         new Positioner(this.browserWindow).move(this.position);
       }
     });
