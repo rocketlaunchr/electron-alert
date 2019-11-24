@@ -1,9 +1,12 @@
-const { ipcRenderer, remote } = require("electron");
-
+const {
+	ipcRenderer,
+	remote
+} = require("electron");
+ 
 let sound = _sound;
 let config = _config;
 let win = remote.getCurrentWindow();
-
+ 
 function playsound(type, freq, duration) {
 	let std = {
 		C: [16.35, 32.7, 65.41, 130.8, 261.6, 523.3, 1047, 2093, 4186],
@@ -19,15 +22,15 @@ function playsound(type, freq, duration) {
 		Bb: [29.14, 58.27, 116.5, 233.1, 466.2, 932.3, 1865, 3729, 7459],
 		B: [30.87, 61.74, 123.5, 246.9, 493.9, 987.8, 1976, 3951, 7902]
 	};
-
+  
 	if (isNaN(freq)) {
 		// not a number
 		regexStr = freq.match(/^(.+)([0-9])$/i);
 		let note = regexStr[1].toUpperCase();
 		let idx = regexStr[2];
-		freq = std[note][idx];
+		freq = std[note][idx]; 
 	}
-
+ 
 	var context = new AudioContext();
 	var o = context.createOscillator();
 	var g = context.createGain();
@@ -39,11 +42,11 @@ function playsound(type, freq, duration) {
 	g.gain.exponentialRampToValueAtTime(
 		0.00001,
 		context.currentTime + duration
-	);
+	); 
 }
-
-// callbacks
-config.onBeforeOpen = modalElement => {
+ 
+// callbacks 
+config.onBeforeOpen = modalElement => { 
 	ipcRenderer.send("${uid}onBeforeOpen", modalElement);
 	ipcRenderer.on("${uid}showLoading", () => Swal.showLoading());
 
@@ -95,6 +98,6 @@ config.onClose = modalElement => {
 };
 
 let ret = Swal.fire(config);
-ret.then(function(result) {
+ret.then(function (result) {
 	ipcRenderer.send("${uid}return-promise", result);
 });
