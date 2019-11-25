@@ -78,7 +78,7 @@ declare module 'electron-alert' {
      *     })
      *   );
      */
-    function uncaughtException(hideTrace?: boolean, closure?: function, alwaysOnTop?: boolean): Promise<SweetAlertResult>
+    function uncaughtException(hideTrace?: boolean, closure?: function, alwaysOnTop?: boolean): void
 
     /**
      * An enum of possible reasons that can explain an alert dismissal.
@@ -162,7 +162,7 @@ declare module 'electron-alert' {
     function enableInput(): void;
 
     /**
-     * If `timer` parameter is set, returns number of milliseconds of timer remained.
+     * If `timer` property is set/defined, returns number of milliseconds of timer remained.
      * Otherwise, returns undefined.
      */
     function getTimerLeft(): Promise<number | undefined>;
@@ -329,24 +329,6 @@ declare module 'electron-alert' {
     footer?: string | HTMLElement | JQuery;
 
     /**
-     * The type of the modal.
-     * SweetAlert2 comes with 5 built-in types which will show a corresponding icon animation: 'warning', 'error',
-     * 'success', 'info' and 'question'.
-     * It can either be put in the array under the key "type" or passed as the third parameter of the function.
-     *
-     * @default null
-     */
-    type?: SweetAlertType;
-
-    /**
-     * Whether or not SweetAlert2 should show a full screen click-to-dismiss backdrop.
-     * Either a boolean value or a css background value (hex, rgb, rgba, url, etc.)
-     *
-     * @default true
-     */
-    backdrop?: boolean | string;
-
-    /**
      * Whether or not an alert should be treated as a toast notification.
      * This option is normally coupled with the `position` parameter and a timer.
      * Toasts are NEVER autofocused.
@@ -469,15 +451,6 @@ declare module 'electron-alert' {
      * @default true
      */
     heightAuto?: boolean;
-
-    /**
-     * If set to false, the user can't dismiss the modal by clicking outside it.
-     * You can also pass a custom function returning a boolean value, e.g. if you want
-     * to disable outside clicks for the loading state of a modal.
-     *
-     * @default true
-     */
-    allowOutsideClick?: ValueOrThunk<boolean>;
 
     /**
      * If set to false, the user can't dismiss the modal by pressing the Escape key.
