@@ -13,7 +13,7 @@ const DismissReason = Object.freeze({
   timer: "timer"
 });
 
-var isMac = process.platform === "darwin";
+const isMac = process.platform === "darwin";
 
 class Alert {
   constructor(head, devTools) {
@@ -27,55 +27,91 @@ class Alert {
     this._isVisible = false;
   }
 
+  /**
+   * An enum of possible reasons that can explain an alert dismissal.
+   */
   static get DismissReason() {
     return DismissReason;
   }
 
+  /**
+   * Determine if a modal is shown.
+   */
   isVisible() {
     return this._isVisible;
   }
 
+  /**
+   * Enable "Confirm" and "Cancel" buttons.
+   */
   enableButtons() {
     this.execJS(`Swal.enableButtons()`);
   }
 
+  /**
+   * Disable "Confirm" and "Cancel" buttons.
+   */
   disableButtons() {
     this.execJS(`Swal.disableButtons()`);
   }
 
+  /**
+   * Disable buttons and show loader. This is useful with AJAX requests.
+   */
   showLoading() {
     this.execJS(`Swal.showLoading()`);
   }
 
+  /**
+   * Disable buttons and show loader. This is useful with AJAX requests.
+   */
   enableLoading() {
     this.showLoading();
   }
 
+  /**
+   * Enable buttons and hide loader.
+   */
   hideLoading() {
     this.execJS(`Swal.hideLoading()`);
   }
 
+  /**
+   * Enable buttons and hide loader.
+   */
   disableLoading() {
     this.hideLoading();
   }
 
+  /**
+   * Determine if modal is in the loading state.
+   *
+   * @returns {Promise<boolean>} Promise which resolves with a boolean
+   */
   isLoading() {
-    //: boolean
     return this.execJS(`Swal.isLoading()`);
   }
 
+  /**
+   * Click the "Confirm"-button programmatically.
+   */
   clickConfirm() {
-    //: void
     this.execJS(`Swal.clickConfirm()`);
   }
 
+  /**
+   * Click the "Cancel"-button programmatically.
+   */
   clickCancel() {
-    //: void
     this.execJS(`Swal.clickCancel()`);
   }
 
+  /**
+   * Show a validation message.
+   *
+   * @param {string} validationMessage The validation message.
+   */
   showValidationMessage(validationMessage) {
-    //: void
     this.execJS(`Swal.showValidationMessage('${validationMessage}')`, () => {
       if (this.browserWindow) {
         this.browserWindow.webContents.send(`${this.uid}resizeToFit`, 25);
@@ -83,8 +119,10 @@ class Alert {
     });
   }
 
+  /**
+   * Hide validation message.
+   */
   resetValidationMessage() {
-    //: void;
     this.execJS(`Swal.resetValidationMessage()`, () => {
       if (this.browserWindow) {
         this.browserWindow.webContents.send(`${this.uid}resizeToFit`, 25);
@@ -92,73 +130,144 @@ class Alert {
     });
   }
 
+  /**
+   * Disable the modal input. A disabled input element is unusable and un-clickable.
+   */
   disableInput() {
-    //: void;
     this.execJS(`Swal.disableInput()`);
   }
 
+  /**
+   * Enable the modal input.
+   */
   enableInput() {
-    //: void;
     this.execJS(`Swal.enableInput()`);
   }
 
+  /**
+   * If `timer` property is is set/defined in swalOptions, returns number of milliseconds of timer remained.
+   * Otherwise, returns undefined.
+   *
+   * @returns {Promise<number | undefined>} Promise which resolves with a number or undefined
+   */
   getTimerLeft() {
-    //: promise => number | undefined;
     return this.execJS(`Swal.getTimerLeft()`);
   }
 
+  /**
+   * Stop timer. Returns number of milliseconds of timer remained.
+   * If `timer` property isn't set in swalOptions, returns undefined.
+   *
+   * @returns {Promise<number | undefined>} Promise which resolves with a number or undefined
+   */
   stopTimer() {
-    //promise => number | undefined;
     return this.execJS(`Swal.stopTimer()`);
   }
 
+  /**
+   * Resume timer. Returns number of milliseconds of timer remained.
+   * If `timer` property isn't set in swalOptions, returns undefined.
+   *
+   * @returns {Promise<number | undefined>} Promise which resolves with a number or undefined
+   */
   resumeTimer() {
-    //: promise => number | undefined;
     return this.execJS(`Swal.resumeTimer()`);
   }
 
+  /**
+   * Toggle timer. Returns number of milliseconds of timer remained.
+   * If `timer` property isn't set in swalOptions, returns undefined.
+   *
+   * @returns {Promise<number | undefined>} Promise which resolves with a number or undefined
+   */
   toggleTimer() {
-    //: promise => number | undefined;
     return this.execJS(`Swal.toggleTimer()`);
   }
 
+  /**
+   * Check if timer is running. Returns true if timer is running,
+   * and false is timer is paused / stopped.
+   *
+   * @returns {Promise<boolean | undefined>} Promise which resolves with a boolean or undefined
+   */
   isTimerRunning() {
-    //: promise => boolean | undefined;
     return this.execJS(`Swal.isTimerRunning()`);
   }
 
-  increaseTimer(
-    n //: promise => number | undefined;
-  ) {
+  /**
+   * Increase timer. Returns number of milliseconds of an updated timer.
+   * If `timer` property isn't set in swalOptions, returns undefined.
+   *
+   * @param {number} n The number of milliseconds to add to the current timer
+   *
+   * @returns {Promise<number | undefined>} Promise which resolves with a number or undefined
+   */
+  increaseTimer(n) {
     return this.execJS(`Swal.increaseTimer(${n})`);
   }
 
+  /**
+   * Shows progress steps.
+   */
   showProgressSteps() {
-    //: void;
     this.execJS(`Swal.showProgressSteps()`);
   }
 
+  /**
+   * Hides progress steps.
+   */
   hideProgressSteps() {
-    //: void;
     this.execJS(`Swal.hideProgressSteps()`);
   }
 
-  isValidParameter(
-    paramName //: promise => boolean;
-  ) {
+  /**
+   * Determine if a given parameter name is valid.
+   *
+   * @param paramName The parameter to check
+   *
+   * @returns {Promise<boolean | undefined>} Promise which resolves with a boolean or undefined
+   */
+  isValidParameter(paramName) {
     return this.execJS(`Swal.isValidParameter('${paramName}')`);
   }
 
-  isUpdatableParameter(
-    paramName //: promise => boolean;
-  ) {
+  /**
+   * Determines if a given parameter name is valid for Swal.update() method.
+   *
+   * @param paramName The parameter to check
+   *
+   * @returns {Promise<boolean | undefined>} Promise which resolves with a boolean or undefined
+   */
+  isUpdatableParameter(paramName) {
     return this.execJS(`isUpdatableParameter('${paramName}')`);
   }
 
+  /**
+   *
+   * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.
+   *
+   *   __Possible `options` for type `SweetAlertOptions`:__
+   *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;
+   *
+   *   __Possible `options` for type `ElectronAlertOptions`:__  {
+   *   > `swalOptions`?: SweetAlertOptions,
+   *     `bwOptions`?: BrowserWindowOptions,
+   *     `title`?: string,
+   *     `parent`?: boolean,
+   *     `alwaysOnTop`?: boolean,
+   *     `sound`?: object
+   *
+   *   };
+   *
+   * __Note:__
+   * If `swalOptions` is defined in `options`, method will assume `options` (arg) to be of type `ElectronAlertOptions`; and if not defined, of type `SweetAlertOptions`.
+   *
+   * @returns {Promise<SweetAlertResult>} Promise which resolves with a value of type SweetAlertResult
+   */
   fireFrameless(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
-        `${options} is not an object. Options object expected as param.`
+        `${options} is not an object. Object of type ElectronAlertOptions or SweetAlertOptions expected as argument.`
       );
 
     let swalOptions = options.swalOptions
@@ -181,7 +290,7 @@ class Alert {
     swalOptions.backdrop = `rgba(0,0,0,0.0)`;
     swalOptions.allowOutsideClick = false;
 
-    if (size !== undefined) {
+    if (size) {
       if (size.hasOwnProperty("width")) {
         bwOptions.width = size.width;
       }
@@ -200,10 +309,34 @@ class Alert {
     });
   }
 
+  /**
+   *
+   * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.
+   *
+   *   __Possible `options` for type `SweetAlertOptions`:__
+   *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;
+   *
+   *   __Possible `options` for type `ElectronAlertOptions`:__  {
+   *   > `swalOptions`?: SweetAlertOptions,
+   *     `bwOptions`?: BrowserWindowOptions,
+   *     `title`?: string,
+   *     `parent`?: boolean,
+   *     `alwaysOnTop`?: boolean,
+   *     `draggable`?: boolean,
+   *     `sound`?: object
+   *
+   *   };
+   *
+   * __Note:__
+   * If `swalOptions` is defined in `options`, method will assume `options` (arg) to be of type `ElectronAlertOptions`; and if not defined, of type `SweetAlertOptions`.
+   *
+   *
+   * @returns {Promise<SweetAlertResult>} Promise which resolves with a value of type SweetAlertResult
+   */
   fireWithFrame(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
-        `${options} is not an object. Options object expected as param.`
+        `${options} is not an object. Object of type ElectronAlertOptions or SweetAlertOptions expected as argument.`
       );
 
     let swalOptions = options.swalOptions
@@ -226,7 +359,7 @@ class Alert {
     swalOptions.allowOutsideClick = false;
     swalOptions.animation = false;
 
-    if (size !== undefined) {
+    if (size) {
       if (size.hasOwnProperty("width")) bwOptions.width = size.width;
       if (size.hasOwnProperty("height")) bwOptions.height = size.height;
     }
@@ -247,10 +380,33 @@ class Alert {
     });
   }
 
+  /**
+   *
+   * @param options Options object of type `SweetAlertOptions` or `ElectronAlertOptions`.
+   *
+   *   __Possible `options` for type `SweetAlertOptions`:__
+   *     See TS definition file (Alert.d.ts) or the original [sweetAlert2](https://sweetalert2.github.io) docs for list of sweetAlert2 options;
+   *
+   *   __Possible `options` for type `ElectronAlertOptions`:__  {
+   *   > `swalOptions`?: SweetAlertOptions,
+   *     `bwOptions`?: BrowserWindowOptions,
+   *     `title`?: string,
+   *     `parent`?: boolean,
+   *     `alwaysOnTop`?: boolean,
+   *     `draggable`?: boolean,
+   *     `sound`?: object
+   *
+   *   };
+   *
+   * __Note:__
+   * If `swalOptions` is defined in `options`, method will assume `options` (arg) to be of type `ElectronAlertOptions`; and if not defined, of type `SweetAlertOptions`.
+   *
+   * @returns {Promise<SweetAlertResult>} Promise which resolves with a value of type SweetAlertResult
+   */
   static fireToast(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
-        `${options} is not an object. Options object expected as param.`
+        `${options} is not an object. Object of type ElectronAlertOptions or SweetAlertOptions expected as argument.`
       );
     // Animation: https://github.com/electron/electron/issues/2407
     // https://stackoverflow.com/questions/54413142/how-can-i-modify-sweetalert2s-toast-animation-settings
@@ -283,7 +439,7 @@ class Alert {
 
     let bwOptions = {};
 
-    if (size !== undefined) {
+    if (size) {
       if (size.hasOwnProperty("width")) {
         bwOptions.width = size.width;
       }
@@ -304,7 +460,7 @@ class Alert {
   fire(options = {}) {
     if (options.constructor !== Object)
       throw new Error(
-        `${options} is not an object. Options object expected as param.`
+        `${options} is not an object. Object of type ElectronAlertOptions or SweetAlertOptions expected as argument.`
       );
 
     let swalOptions = options.swalOptions
@@ -324,7 +480,7 @@ class Alert {
     let uid = this.uid,
       head = this.head;
 
-    var bwOptionsBase = {
+    let bwOptionsBase = {
       width: 800,
       height: 600,
       resizable: false,
@@ -338,7 +494,7 @@ class Alert {
       }
     };
 
-    var bwOptionsFinal = Object.assign(bwOptionsBase, bwOptions, {
+    let bwOptionsFinal = Object.assign(bwOptionsBase, bwOptions, {
       show: false
     });
 
@@ -394,7 +550,13 @@ class Alert {
       <head>
 		<script type="text/javascript"><@insert-swal-lib@></script>
 		<style>.noselect{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;-webkit-app-region:no-drag}.no-drag{-webkit-app-region:no-drag}.border-radius-0{border-radius:0}</style>
-        ${Array.isArray(head) ? head.join("\n") : ""}
+        ${
+          Array.isArray(head)
+            ? head.join("\n")
+            : typeof head === "string"
+            ? head
+            : null
+        }
       </head>
       <body draggable="false" class="noselect" ${
         draggable === true ? 'style="-webkit-app-region:drag"' : ""
@@ -495,7 +657,7 @@ class Alert {
       this.browserWindow = null;
 
       // Send signal that browserWindow is closed
-      ipcMain.emit(uid + "return-promise", undefined, {
+      ipcMain.emit(uid + "return-promise", null, {
         dismiss: "close"
       });
 
@@ -569,12 +731,10 @@ class Alert {
       if (closure) swalOptions.onAfterClose = () => closure(error);
 
       alert.fireWithFrame({
-        swalOptions: swalOptions,
+        swalOptions,
         title: error.name,
-        alwaysOnTop: alwaysOnTop
+        alwaysOnTop
       });
-      // alert.fireWithFrame(swalOptions, error.name, undefined, alwaysOnTop);
-      // alert.fireFrameless(swalOptions, undefined, alwaysOnTop, true);
     };
   }
 }
