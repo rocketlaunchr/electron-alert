@@ -2,7 +2,7 @@
   "name": "electron-alert",
   "version": "0.1.4",
   "description": "SweetAlert2 for Electron Applications",
-  "main": "dist/Alert.js",
+  "main": "dist/alert.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c"
@@ -34,7 +34,7 @@
     "electron": ">=4.0.0"
   },
   "files": [
-    "dist/Alert.js",
-    "dist/Alert.min.js"
+    "dist/alert.js",
+    "dist/alert.min.js"
   ]
 }
