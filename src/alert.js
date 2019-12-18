@@ -4,8 +4,14 @@ const cryptoRandomString = require("crypto-random-string");
 const Positioner = require("electron-positioner");
 const fs = require("fs");
 const exceptionFormatter = require("exception-formatter");
+const DismissReason = Object.freeze({
+	cancel: "cancel",
+	close: "close",
+	esc: "esc",
+	timer: "timer"
+});
 
-var isMac = process.platform === "darwin";
+const isMac = process.platform === "darwin";
 
 module.exports = class Alert {
 	constructor(head, devTools) {
@@ -15,6 +21,10 @@ module.exports = class Alert {
 		this.browserWindow = null;
 		this.position = "center";
 		this._isVisible = false;
+	}
+
+	static get DismissReason() {
+		return DismissReason;
 	}
 
 	isVisible() {
@@ -345,7 +355,8 @@ module.exports = class Alert {
     `;
 
 		// Disable menu (and refresh shortcuts)
-		this.browserWindow.removeMenu();
+		this.browserWindow.setMenu(null);  
+
 
 		// Save html
 		let filepath = tempWrite.sync(html, "swal.html");
