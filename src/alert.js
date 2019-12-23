@@ -1,5 +1,6 @@
 const { ipcMain, globalShortcut, app, BrowserWindow } = require("electron");
 const tempWrite = require("temp-write");
+const cleanStak = require("clean-stack");
 const cryptoRandomString = require("crypto-random-string");
 const Positioner = require("electron-positioner");
 const fs = require("fs");
@@ -200,7 +201,7 @@ module.exports = class Alert {
 			transparent: false,
 			thickFrame: true,
 			closable: true,
-			title: title ? title : app.getName()
+			title: title ? title : "name" in app ? app.name : app.getName()
 		};
 
 		bwOptions = bwOptions;
@@ -297,7 +298,7 @@ module.exports = class Alert {
 		bwOptionsFinal.webPreferences.nodeIntegration = true;
 		bwOptionsFinal.skipTaskbar = true;
 
-		if (alwaysOnTop !== undefined) {
+		if (alwaysOnTop === true) {
 			bwOptionsFinal["alwaysOnTop"] = alwaysOnTop;
 		}
 
@@ -355,8 +356,7 @@ module.exports = class Alert {
     `;
 
 		// Disable menu (and refresh shortcuts)
-		this.browserWindow.setMenu(null);  
-
+		this.browserWindow.setMenu(null);
 
 		// Save html
 		let filepath = tempWrite.sync(html, "swal.html");
@@ -491,12 +491,15 @@ module.exports = class Alert {
 		);
 	}
 
-	static uncaughtException(hideTrace, closure, alwaysOnTop) {
+	static uncaughtException(hideTrace, closure, alwaysOnTop, cleanStack) {
 		return error => {
-			let html = exceptionFormatter(error, {
-				format: "html",
-				inlineStyle: true
-			});
+			let html = exceptionFormatter(
+				cleanStack === true ? cleanStak(error.stack) : error,
+				{
+					format: "html",
+					inlineStyle: true
+				}
+			);
 
 			let alert = new Alert([], false);
 
@@ -520,14 +523,7 @@ module.exports = class Alert {
 				};
 			}
 
-			alert.fireWithFrame(
-				swalOptions,
-				error.name,
-				undefined,
-				alwaysOnTop
-			);
-
-			// alert.fireFrameless(swalOptions, undefined, alwaysOnTop, true);
+			alert.fireWithFrame(swalOptions, undefined, undefined, alwaysOnTop);
 		};
 	}
 };
