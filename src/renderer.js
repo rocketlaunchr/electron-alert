@@ -1,3 +1,5 @@
+// Copyright 2019-20 PJ Engineering and Business Solutions Pty. Ltd. All rights reserved.
+
 const {
 	ipcRenderer,
 	remote

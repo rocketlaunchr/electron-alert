@@ -1,3 +1,5 @@
+// Copyright 2019-20 PJ Engineering and Business Solutions Pty. Ltd. All rights reserved.
+
 const { ipcMain, globalShortcut, app, BrowserWindow } = require("electron");
 const tempWrite = require("temp-write");
 const cleanStak = require("clean-stack");

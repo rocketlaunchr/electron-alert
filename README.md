@@ -23,7 +23,7 @@
 -   Toasts with timers
 -   Exception handling alert
 -   Sounds
--   SweetAlert2-esque API\*
+-   SweetAlert2-esque API\* ([v8.19](https://sweetalert2.github.io/v8.html))
 
 ### Documentation
 
@@ -39,4 +39,4 @@ If you use ElectronAlert in your project, add it here.
 
 MIT license. Refer to `LICENSE` file for more details.
 
-**© 2019 PJ Engineering and Business Solutions Pty. Ltd.**
+**© 2019-20 PJ Engineering and Business Solutions Pty. Ltd.**
