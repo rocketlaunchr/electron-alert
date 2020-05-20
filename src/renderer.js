@@ -49,7 +49,7 @@ function playsound(type, freq, duration) {
  
 // callbacks 
 config.onBeforeOpen = modalElement => { 
-	ipcRenderer.send("${uid}onBeforeOpen", modalElement);
+	ipcRenderer.send("${uid}onBeforeOpen");
 	ipcRenderer.on("${uid}showLoading", () => Swal.showLoading());
 
 	if (sound !== undefined) {
@@ -74,7 +74,7 @@ config.onOpen = modalElement => {
 		ipcRenderer.send("${uid}reposition");
 	}, 25);
 
-	ipcRenderer.send("${uid}onOpen", modalElement);
+	ipcRenderer.send("${uid}onOpen");
 
 	ipcRenderer.on("${uid}resizeToFit", delay => {
 		if (delay !== undefined) {
@@ -96,7 +96,7 @@ config.onOpen = modalElement => {
 };
 
 config.onClose = modalElement => {
-	ipcRenderer.send("${uid}onClose", modalElement);
+	ipcRenderer.send("${uid}onClose");
 };
 
 let ret = Swal.fire(config);

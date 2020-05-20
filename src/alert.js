@@ -298,6 +298,7 @@ module.exports = class Alert {
 			bwOptionsFinal["modal"] = true;
 		}
 		bwOptionsFinal.webPreferences.nodeIntegration = true;
+		bwOptionsFinal.webPreferences.enableRemoteModule = true;
 		bwOptionsFinal.skipTaskbar = true;
 
 		if (alwaysOnTop === true) {
