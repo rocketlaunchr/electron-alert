@@ -319,12 +319,12 @@ module.exports = class Alert {
 			);
 		}
 
-		if (bwOptionsFinal.hasOwnProperty("singletonId")) {
+		if (swalOptions.hasOwnProperty("singletonId")) {
 			// Check if singletonId already exists in singletonIds
-			if (singletonIds.hasOwnProperty(bwOptionsFinal.singletonId)) {
+			if (singletonIds.hasOwnProperty(swalOptions.singletonId)) {
 				return;
 			} else {
-				singletonIds[bwOptionsFinal.singletonId] = true;
+				singletonIds[swalOptions.singletonId] = true;
 			}
 		}
 
@@ -483,8 +483,8 @@ module.exports = class Alert {
 				uid + "resizeToFit",
 			]);
 
-			if (bwOptionsFinal.hasOwnProperty("singletonId")) {
-				delete singletonIds[bwOptionsFinal.singletonId];
+			if (swalOptions.hasOwnProperty("singletonId")) {
+				delete singletonIds[swalOptions.singletonId];
 			}
 		});
 
