@@ -324,7 +324,7 @@ module.exports = class Alert {
 		if (swalOptions.hasOwnProperty("singletonId")) {
 			// Check if singletonId already exists in singletonIds
 			if (singletonIds.hasOwnProperty(swalOptions.singletonId)) {
-				singletonIds[swalOptions.singletonId].focus();
+				singletonIds[swalOptions.singletonId].show();
 				return;
 			} else {
 				singletonIds[swalOptions.singletonId] = this.browserWindow;
