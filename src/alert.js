@@ -319,16 +319,17 @@ module.exports = class Alert {
 			);
 		}
 
+		this.browserWindow = new BrowserWindow(bwOptionsFinal);
+
 		if (swalOptions.hasOwnProperty("singletonId")) {
 			// Check if singletonId already exists in singletonIds
 			if (singletonIds.hasOwnProperty(swalOptions.singletonId)) {
+				singletonIds[swalOptions.singletonId].focus();
 				return;
 			} else {
-				singletonIds[swalOptions.singletonId] = true;
+				singletonIds[swalOptions.singletonId] = this.browserWindow;
 			}
 		}
-
-		this.browserWindow = new BrowserWindow(bwOptionsFinal);
 
 		let positions = {
 			top: "topCenter",
