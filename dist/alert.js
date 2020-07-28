@@ -13,10 +13,12 @@ const DismissReason = Object.freeze({
 	cancel: "cancel",
 	close: "close",
 	esc: "esc",
-	timer: "timer"
+	timer: "timer",
 });
 
 const isMac = process.platform === "darwin";
+
+const singletonIds = {};
 
 module.exports = class Alert {
 	constructor(head, devTools) {
@@ -173,7 +175,7 @@ module.exports = class Alert {
 			thickFrame: false,
 			closable: false,
 			backgroundColor: "#00000000",
-			hasShadow: false
+			hasShadow: false,
 		};
 
 		bwOptions = bwOptions;
@@ -205,7 +207,7 @@ module.exports = class Alert {
 			transparent: false,
 			thickFrame: true,
 			closable: true,
-			title: title ? title : "name" in app ? app.name : app.getName()
+			title: title ? title : "name" in app ? app.name : app.getName(),
 		};
 
 		bwOptions = bwOptions;
@@ -224,7 +226,7 @@ module.exports = class Alert {
 		swalOptions.customClass = Object.assign(
 			swalOptions.customClass ? swalOptions.customClass : {},
 			{
-				popup: "border-radius-0"
+				popup: "border-radius-0",
 			}
 		);
 
@@ -286,12 +288,12 @@ module.exports = class Alert {
 			fullscreenable: false,
 			webPreferences: {
 				nodeIntegration: true,
-				devTools: this.devTools === true ? true : false
-			}
+				devTools: this.devTools === true ? true : false,
+			},
 		};
 
 		var bwOptionsFinal = Object.assign(bwOptionsBase, bwOptions, {
-			show: false
+			show: false,
 		});
 
 		// Force these settings
@@ -314,9 +316,18 @@ module.exports = class Alert {
 					closeButton: "no-drag",
 					confirmButton: "no-drag",
 					cancelButton: "no-drag",
-					input: "no-drag"
+					input: "no-drag",
 				}
 			);
+		}
+
+		if (bwOptionsFinal.hasOwnProperty("singletonId")) {
+			// Check if singletonId already exists in singletonIds
+			if (singletonIds.hasOwnProperty(bwOptionsFinal.singletonId)) {
+				return;
+			} else {
+				singletonIds[bwOptionsFinal.singletonId] = true;
+			}
 		}
 
 		this.browserWindow = new BrowserWindow(bwOptionsFinal);
@@ -330,7 +341,7 @@ module.exports = class Alert {
 			"center-end": "rightCenter",
 			bottom: "bottomCenter",
 			"bottom-start": "bottomLeft",
-			"bottom-end": "bottomRight"
+			"bottom-end": "bottomRight",
 		};
 
 		if (swalOptions.position) {
@@ -372,14 +383,14 @@ module.exports = class Alert {
 
 		if (isMac) {
 			// Disable Window Refresh (Cmd+R)
-			this.browserWindow.on("focus", event => {
+			this.browserWindow.on("focus", (event) => {
 				globalShortcut.registerAll(
 					["CommandOrControl+R", "CommandOrControl+Shift+R"],
 					() => {}
 				);
 			});
 
-			this.browserWindow.on("blur", event => {
+			this.browserWindow.on("blur", (event) => {
 				globalShortcut.unregister("CommandOrControl+R");
 				globalShortcut.unregister("CommandOrControl+Shift+R");
 			});
@@ -442,7 +453,7 @@ module.exports = class Alert {
 		});
 
 		this.browserWindow.once("closed", () => {
-			fs.unlink(filepath, err => {});
+			fs.unlink(filepath, (err) => {});
 
 			if (!this.browserWindow.isDestroyed()) {
 				this.browserWindow.destroy();
@@ -451,7 +462,7 @@ module.exports = class Alert {
 
 			// Send signal that browserWindow is closed
 			ipcMain.emit(uid + "return-promise", undefined, {
-				dismiss: "close"
+				dismiss: "close",
 			});
 
 			if (swalOptions.hasOwnProperty("onAfterClose")) {
@@ -473,8 +484,12 @@ module.exports = class Alert {
 				uid + "onClose",
 				uid + "reposition",
 				uid + "return-promise",
-				uid + "resizeToFit"
+				uid + "resizeToFit",
 			]);
+
+			if (bwOptionsFinal.hasOwnProperty("singletonId")) {
+				delete singletonIds[bwOptionsFinal.singletonId];
+			}
 		});
 
 		return new Promise((resolve, reject) => {
@@ -486,7 +501,7 @@ module.exports = class Alert {
 
 	execJS(javascript, callback) {
 		if (this.browserWindow === null) {
-			return new Promise(resolve => {
+			return new Promise((resolve) => {
 				resolve();
 			});
 		}
@@ -499,19 +514,19 @@ module.exports = class Alert {
 	}
 
 	static uncaughtException(hideTrace, closure, alwaysOnTop, cleanStack) {
-		return error => {
+		return (error) => {
 			let html = exceptionFormatter(
 				cleanStack === true ? cleanStak(error.stack) : error,
 				{
 					format: "html",
-					inlineStyle: true
+					inlineStyle: true,
 				}
 			);
 
 			let alert = new Alert([], false);
 
 			let swalOptions = {
-				type: "error"
+				type: "error",
 			};
 
 			if (hideTrace !== true) {
