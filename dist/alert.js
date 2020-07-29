@@ -14,6 +14,7 @@ const DismissReason = Object.freeze({
 	close: "close",
 	esc: "esc",
 	timer: "timer",
+	showing: "showing", // Singleton alert currently showing
 });
 
 const isMac = process.platform === "darwin";
@@ -327,7 +328,9 @@ module.exports = class Alert {
 			// Check if singletonId already exists in singletonIds
 			if (singletonIds.hasOwnProperty(swalOptions.singletonId)) {
 				singletonIds[swalOptions.singletonId].show();
-				return;
+				return new Promise((resolve, reject) => {
+					resolve({ dismiss: DismissReason.showing });
+				});
 			} else {
 				singletonIds[swalOptions.singletonId] = this.browserWindow;
 			}
