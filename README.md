@@ -1,3 +1,7 @@
+<p align="right">
+  ⭐ &nbsp;&nbsp;<strong>the project to show your appreciation.</strong> :arrow_upper_right:
+</p>
+
 <p align="center">
   <a href="https://electron.guide/electron-alert/">
     <img src="/assets/electronalert.png" alt="ElectronAlert">
@@ -14,8 +18,6 @@
     See ElectronAlert in action ↗
   </a>
 </p>
-
-⭐ **the project to show your appreciation.**
 
 ### Features
 
@@ -39,4 +41,4 @@ If you use ElectronAlert in your project, add it here.
 
 MIT license. Refer to `LICENSE` file for more details.
 
-**© 2019-20 PJ Engineering and Business Solutions Pty. Ltd.**
+**© 2019-21 PJ Engineering and Business Solutions Pty. Ltd.**
