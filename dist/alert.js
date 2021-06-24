@@ -289,6 +289,7 @@ module.exports = class Alert {
 			fullscreenable: false,
 			webPreferences: {
 				nodeIntegration: true,
+				contextIsolation: false,
 				devTools: this.devTools === true ? true : false,
 			},
 		};
@@ -303,6 +304,7 @@ module.exports = class Alert {
 			bwOptionsFinal["modal"] = true;
 		}
 		bwOptionsFinal.webPreferences.nodeIntegration = true;
+		bwOptionsFinal.webPreferences.contextIsolation = false;
 		bwOptionsFinal.webPreferences.enableRemoteModule = true;
 		bwOptionsFinal.skipTaskbar = true;
 
