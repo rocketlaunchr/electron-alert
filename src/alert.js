@@ -337,7 +337,10 @@ module.exports = class Alert {
 		}
 
 		// For backward compatability with v8 of SweetAlert 2 (rename of type to icon)
-		if (swalOptions.hasOwnProperty("type") && !swalOptions.hasOwnProperty("icon")) {
+		if (
+			swalOptions.hasOwnProperty("type") &&
+			!swalOptions.hasOwnProperty("icon")
+		) {
 			swalOptions["icon"] = swalOptions["type"];
 		}
 
@@ -419,7 +422,7 @@ module.exports = class Alert {
 			if (!(isMac && (parent !== undefined && parent !== null))) {
 				new Positioner(this.browserWindow).move(this.position);
 			}
-			event.returnValue = 'repositioned';
+			event.returnValue = "repositioned";
 		});
 
 		// Callbacks
@@ -427,6 +430,11 @@ module.exports = class Alert {
 		ipcMain.once(uid + "willOpen", (event, arg) => {
 			if (swalOptions.hasOwnProperty("willOpen")) {
 				swalOptions.willOpen(arg);
+			} else {
+				// For backward compatability
+				if (swalOptions.hasOwnProperty("onBeforeOpen")) {
+					swalOptions.onBeforeOpen(arg);
+				}
 			}
 		});
 
@@ -440,6 +448,11 @@ module.exports = class Alert {
 			this._isVisible = true;
 			if (swalOptions.hasOwnProperty("didOpen")) {
 				swalOptions.didOpen(arg);
+			} else {
+				// For backward compatability
+				if (swalOptions.hasOwnProperty("onOpen")) {
+					swalOptions.onOpen(arg);
+				}
 			}
 		});
 
@@ -449,6 +462,11 @@ module.exports = class Alert {
 			willCloseSignalSent = true;
 			if (swalOptions.hasOwnProperty("willClose")) {
 				swalOptions.willClose(arg);
+			} else {
+				// For backward compatability
+				if (swalOptions.hasOwnProperty("onClose")) {
+					swalOptions.onClose(arg);
+				}
 			}
 		});
 
@@ -456,6 +474,11 @@ module.exports = class Alert {
 			if (!willCloseSignalSent) {
 				if (swalOptions.hasOwnProperty("willClose")) {
 					swalOptions.willClose({});
+				} else {
+					// For backward compatability
+					if (swalOptions.hasOwnProperty("onClose")) {
+						swalOptions.onClose(arg);
+					}
 				}
 			}
 		});
@@ -475,6 +498,10 @@ module.exports = class Alert {
 
 			if (swalOptions.hasOwnProperty("didClose")) {
 				swalOptions.didClose();
+			} else {
+				if (swalOptions.hasOwnProperty("onAfterClose")) {
+					swalOptions.onAfterClose(arg);
+				}
 			}
 
 			if (isMac && !bwOptionsFinal.noGlobalShortcut) {
