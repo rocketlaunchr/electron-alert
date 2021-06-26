@@ -48,8 +48,8 @@ function playsound(type, freq, duration) {
 }
  
 // callbacks 
-config.onBeforeOpen = modalElement => { 
-	ipcRenderer.send("${uid}onBeforeOpen");
+config.willOpen = modalElement => { 
+	ipcRenderer.send("${uid}willOpen");
 	ipcRenderer.on("${uid}showLoading", () => Swal.showLoading());
 
 	if (sound !== undefined) {
@@ -57,11 +57,11 @@ config.onBeforeOpen = modalElement => {
 	}
 };
 
-config.onAfterClose = () => {
-	ipcRenderer.send("${uid}onAfterClose");
+config.didClose = () => {
+	ipcRenderer.send("${uid}didClose");
 };
 
-config.onOpen = modalElement => {
+config.didOpen = modalElement => {
 	let titlebarHeight = win.getSize()[1] - win.getContentSize()[1];
 	modalElement.parentNode.style.padding = "0px 0px 0px 0px";
 	window.resizeTo(
@@ -69,12 +69,14 @@ config.onOpen = modalElement => {
 		modalElement.scrollHeight + titlebarHeight + 1
 	);
 
+	// Prevent occasional flicker when shown for the first time
 	ipcRenderer.send("${uid}reposition");
 	window.setTimeout(() => {
-		ipcRenderer.send("${uid}reposition");
+		ipcRenderer.sendSync("${uid}reposition");
+		win.show();
 	}, 25);
 
-	ipcRenderer.send("${uid}onOpen");
+	ipcRenderer.send("${uid}didOpen");
 
 	ipcRenderer.on("${uid}resizeToFit", delay => {
 		if (delay !== undefined) {
@@ -95,8 +97,8 @@ config.onOpen = modalElement => {
 	ipcRenderer.on("${uid}hideLoading", () => Swal.hideLoading());
 };
 
-config.onClose = modalElement => {
-	ipcRenderer.send("${uid}onClose");
+config.willClose = modalElement => {
+	ipcRenderer.send("${uid}willClose");
 };
 
 let ret = Swal.fire(config);

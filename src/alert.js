@@ -248,7 +248,7 @@ module.exports = class Alert {
 
 		let alert = new Alert();
 		swalOptions.toast = true;
-		// swalOptions.onOpen = el => {
+		// swalOptions.didOpen = el => {
 		// alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
 		// };
 
@@ -336,6 +336,11 @@ module.exports = class Alert {
 			}
 		}
 
+		// For backward compatability with v8 of SweetAlert 2 (rename of type to icon)
+		if (swalOptions.hasOwnProperty("type") && !swalOptions.hasOwnProperty("icon")) {
+			swalOptions["icon"] = swalOptions["type"];
+		}
+
 		let positions = {
 			top: "topCenter",
 			"top-start": "topLeft",
@@ -377,13 +382,14 @@ module.exports = class Alert {
 
 		// Disable menu (and refresh shortcuts)
 		this.browserWindow.setMenu(null);
+		this.excludedFromShownWindowsMenu = true; // mac only
 
 		// Save html
 		let filepath = tempWrite.sync(html, "swal.html");
 
 		this.browserWindow.loadURL("file://" + filepath);
 
-		if (isMac) {
+		if (isMac && !bwOptionsFinal.noGlobalShortcut) {
 			// Disable Window Refresh (Cmd+R)
 			this.browserWindow.on("focus", (event) => {
 				globalShortcut.registerAll(
@@ -402,7 +408,6 @@ module.exports = class Alert {
 			if (!(isMac && (parent !== undefined && parent !== null))) {
 				new Positioner(this.browserWindow).move(this.position);
 			}
-			this.browserWindow.show();
 		});
 
 		// For debugging only. Remove ASAP.
@@ -414,42 +419,43 @@ module.exports = class Alert {
 			if (!(isMac && (parent !== undefined && parent !== null))) {
 				new Positioner(this.browserWindow).move(this.position);
 			}
+			event.returnValue = 'repositioned';
 		});
 
 		// Callbacks
 
-		ipcMain.once(uid + "onBeforeOpen", (event, arg) => {
-			if (swalOptions.hasOwnProperty("onBeforeOpen")) {
-				swalOptions.onBeforeOpen(arg);
+		ipcMain.once(uid + "willOpen", (event, arg) => {
+			if (swalOptions.hasOwnProperty("willOpen")) {
+				swalOptions.willOpen(arg);
 			}
 		});
 
-		ipcMain.once(uid + "onAfterClose", (event, arg) => {
+		ipcMain.once(uid + "didClose", (event, arg) => {
 			if (this.browserWindow) {
 				this.browserWindow.destroy();
 			}
 		});
 
-		ipcMain.once(uid + "onOpen", (event, arg) => {
+		ipcMain.once(uid + "didOpen", (event, arg) => {
 			this._isVisible = true;
-			if (swalOptions.hasOwnProperty("onOpen")) {
-				swalOptions.onOpen(arg);
+			if (swalOptions.hasOwnProperty("didOpen")) {
+				swalOptions.didOpen(arg);
 			}
 		});
 
-		let onCloseSignalSent = false;
-		ipcMain.once(uid + "onClose", (event, arg) => {
+		let willCloseSignalSent = false;
+		ipcMain.once(uid + "willClose", (event, arg) => {
 			this._isVisible = false;
-			onCloseSignalSent = true;
-			if (swalOptions.hasOwnProperty("onClose")) {
-				swalOptions.onClose(arg);
+			willCloseSignalSent = true;
+			if (swalOptions.hasOwnProperty("willClose")) {
+				swalOptions.willClose(arg);
 			}
 		});
 
 		this.browserWindow.once("close", () => {
-			if (!onCloseSignalSent) {
-				if (swalOptions.hasOwnProperty("onClose")) {
-					swalOptions.onClose({});
+			if (!willCloseSignalSent) {
+				if (swalOptions.hasOwnProperty("willClose")) {
+					swalOptions.willClose({});
 				}
 			}
 		});
@@ -467,11 +473,11 @@ module.exports = class Alert {
 				dismiss: "close",
 			});
 
-			if (swalOptions.hasOwnProperty("onAfterClose")) {
-				swalOptions.onAfterClose();
+			if (swalOptions.hasOwnProperty("didClose")) {
+				swalOptions.didClose();
 			}
 
-			if (isMac) {
+			if (isMac && !bwOptionsFinal.noGlobalShortcut) {
 				// Disable Window Refresh (Cmd+R)
 				globalShortcut.unregister("CommandOrControl+R");
 				globalShortcut.unregister("CommandOrControl+Shift+R");
@@ -480,10 +486,10 @@ module.exports = class Alert {
 			// Remove all listeners
 			ipcMain.removeAllListeners([
 				uid + "log",
-				uid + "onBeforeOpen",
-				uid + "onAfterClose",
-				uid + "onOpen",
-				uid + "onClose",
+				uid + "willOpen",
+				uid + "didClose",
+				uid + "didOpen",
+				uid + "willClose",
 				uid + "reposition",
 				uid + "return-promise",
 				uid + "resizeToFit",
@@ -528,7 +534,7 @@ module.exports = class Alert {
 			let alert = new Alert([], false);
 
 			let swalOptions = {
-				type: "error",
+				icon: "error",
 			};
 
 			if (hideTrace !== true) {
@@ -542,7 +548,7 @@ module.exports = class Alert {
 			}
 
 			if (closure) {
-				swalOptions["onAfterClose"] = () => {
+				swalOptions["didClose"] = () => {
 					closure(error);
 				};
 			}
