@@ -76,6 +76,11 @@ module.exports = class Alert {
 		this.execJS(`Swal.clickCancel()`);
 	}
 
+	clickDeny() {
+		//: void
+		this.execJS(`Swal.clickDeny()`);
+	}
+
 	showValidationMessage(validationMessage) {
 		//: void
 		this.execJS(
@@ -143,16 +148,6 @@ module.exports = class Alert {
 		n //: promise => number | undefined;
 	) {
 		return this.execJS(`Swal.increaseTimer(${n})`);
-	}
-
-	showProgressSteps() {
-		//: void;
-		this.execJS(`Swal.showProgressSteps()`);
-	}
-
-	hideProgressSteps() {
-		//: void;
-		this.execJS(`Swal.hideProgressSteps()`);
 	}
 
 	isValidParameter(
