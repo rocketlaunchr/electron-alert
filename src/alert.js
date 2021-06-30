@@ -328,10 +328,21 @@ module.exports = class Alert {
 					closeButton: "no-drag",
 					confirmButton: "no-drag",
 					cancelButton: "no-drag",
+					denyButton: "no-drag",
 					input: "no-drag",
 				}
 			);
 		}
+
+		// Hide vertical scrollbar
+		swalOptions.customClass = Object.assign(
+			swalOptions.customClass ? swalOptions.customClass : {},
+			{
+				container: "noscrollbar",
+			}
+		);
+
+
 
 		this.browserWindow = new BrowserWindow(bwOptionsFinal);
 
@@ -381,6 +392,7 @@ module.exports = class Alert {
       <head>
 		<script type="text/javascript"><@insert-swal-lib@></script>
 		<style>.noselect{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;-webkit-app-region:no-drag}.no-drag{-webkit-app-region:no-drag}.border-radius-0{border-radius:0}</style>
+        <style>.noscrollbar{overflow-y: hidden !important;}</style>
         ${Array.isArray(head) ? head.join("\n") : ""}
       </head>
       <body draggable="false" class="noselect" ${
