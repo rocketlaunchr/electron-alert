@@ -206,7 +206,6 @@ module.exports = class Alert {
 
 		bwOptions = bwOptions;
 		swalOptions.allowOutsideClick = false;
-		swalOptions.animation = false;
 
 		if (size !== undefined) {
 			if (size.hasOwnProperty("width")) {
@@ -221,6 +220,23 @@ module.exports = class Alert {
 			swalOptions.customClass ? swalOptions.customClass : {},
 			{
 				popup: "border-radius-0",
+			}
+		);
+
+		// Disable animation
+		swalOptions.showClass = Object.assign(
+			swalOptions.showClass ? swalOptions.showClass : {},
+			{
+				backdrop: "swal2-noanimation",
+				popup: "",
+				icon: "",
+			}
+		);
+
+		swalOptions.hideClass = Object.assign(
+			swalOptions.hideClass ? swalOptions.hideClass : {},
+			{
+				popup: "",
 			}
 		);
 
