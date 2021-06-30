@@ -546,7 +546,11 @@ module.exports = class Alert {
 	static uncaughtException(hideTrace, closure, alwaysOnTop, cleanStack) {
 		return (error) => {
 			let html = exceptionFormatter(
-				cleanStack === true ? cleanStak(error.stack) : error,
+				cleanStack === true
+					? error.stack
+						? cleanStak(error.stack)
+						: error
+					: error,
 				{
 					format: "html",
 					inlineStyle: true,
