@@ -500,7 +500,7 @@ module.exports = class Alert {
 				} else {
 					// For backward compatability
 					if (swalOptions.hasOwnProperty("onClose")) {
-						swalOptions.onClose(arg);
+						swalOptions.onClose({});
 					}
 				}
 			}
@@ -523,7 +523,7 @@ module.exports = class Alert {
 				swalOptions.didClose();
 			} else {
 				if (swalOptions.hasOwnProperty("onAfterClose")) {
-					swalOptions.onAfterClose(arg);
+					swalOptions.onAfterClose();
 				}
 			}
 
