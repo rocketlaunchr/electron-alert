@@ -163,16 +163,21 @@ module.exports = class Alert {
 	}
 
 	fireFrameless(swalOptions, parent, alwaysOnTop, draggable, sound, size) {
-		let bwOptions = {
+		var bwOptions = {};
+
+		if (swalOptions.hasOwnProperty("bw")) {
+			bwOptions = swalOptions.bw;
+		}
+
+		bwOptions = Object.assign(bwOptions, {
 			frame: false,
 			transparent: true,
 			thickFrame: false,
 			closable: false,
 			backgroundColor: "#00000000",
 			hasShadow: false,
-		};
+		});
 
-		bwOptions = bwOptions;
 		swalOptions.backdrop = `rgba(0,0,0,0.0)`;
 		swalOptions.allowOutsideClick = false;
 
@@ -196,15 +201,20 @@ module.exports = class Alert {
 	}
 
 	fireWithFrame(swalOptions, title, parent, alwaysOnTop, sound, size) {
-		let bwOptions = {
+		var bwOptions = {};
+
+		if (swalOptions.hasOwnProperty("bw")) {
+			bwOptions = swalOptions.bw;
+		}
+
+		bwOptions = Object.assign(bwOptions, {
 			frame: true,
 			transparent: false,
 			thickFrame: true,
 			closable: true,
 			title: title ? title : "name" in app ? app.name : app.getName(),
-		};
+		});
 
-		bwOptions = bwOptions;
 		swalOptions.allowOutsideClick = false;
 
 		if (size !== undefined) {
@@ -341,8 +351,6 @@ module.exports = class Alert {
 				container: "noscrollbar",
 			}
 		);
-
-
 
 		this.browserWindow = new BrowserWindow(bwOptionsFinal);
 
