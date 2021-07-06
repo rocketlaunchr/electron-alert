@@ -420,7 +420,7 @@ module.exports = class Alert {
 
 		// Disable menu (and refresh shortcuts)
 		this.browserWindow.setMenu(null);
-		this.excludedFromShownWindowsMenu = true; // mac only
+		this.browserWindow.excludedFromShownWindowsMenu = true; // mac only
 
 		// Save html
 		let filepath = tempWrite.sync(html, "swal.html");
