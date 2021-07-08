@@ -41,6 +41,18 @@ Please issue a PR if you discover a bug or wish to add a feature!
   </a>
 </p>
 
+<p align="center">
+  <a href="https://bitfinex.com">
+    <img src="/assets/bitfinex-logo.svg" alt="Bitfinex">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.thecucumber.app/">
+    <img src="/assets/cucumber-logo.png" alt="theCucumber.app">
+  </a>
+</p>
+
 If you use ElectronAlert in your project, add it here.
 
 ### Legal Information
