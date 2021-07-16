@@ -64,103 +64,75 @@ module.exports = class Alert {
 	}
 
 	isLoading() {
-		//: boolean
 		return this.execJS(`Swal.isLoading()`);
 	}
 
 	clickConfirm() {
-		//: void
 		this.execJS(`Swal.clickConfirm()`);
 	}
 
 	clickCancel() {
-		//: void
 		this.execJS(`Swal.clickCancel()`);
 	}
 
 	clickDeny() {
-		//: void
 		this.execJS(`Swal.clickDeny()`);
 	}
 
 	showValidationMessage(validationMessage) {
-		//: void
-		this.execJS(
-			`Swal.showValidationMessage('${validationMessage}')`,
-			() => {
-				if (this.browserWindow) {
-					this.browserWindow.webContents.send(
-						`${this.uid}resizeToFit`,
-						25
-					);
-				}
+		this.execJS(`Swal.showValidationMessage('${validationMessage}')`, () => {
+			if (this.browserWindow) {
+				this.browserWindow.webContents.send(`${this.uid}resizeToFit`, 25);
 			}
-		);
+		});
 	}
 
 	resetValidationMessage() {
-		//: void;
 		this.execJS(`Swal.resetValidationMessage()`, () => {
 			if (this.browserWindow) {
-				this.browserWindow.webContents.send(
-					`${this.uid}resizeToFit`,
-					25
-				);
+				this.browserWindow.webContents.send(`${this.uid}resizeToFit`, 25);
 			}
 		});
 	}
 
 	disableInput() {
-		//: void;
 		this.execJS(`Swal.disableInput()`);
 	}
 
 	enableInput() {
-		//: void;
 		this.execJS(`Swal.enableInput()`);
 	}
 
 	getTimerLeft() {
-		//: promise => number | undefined;
 		return this.execJS(`Swal.getTimerLeft()`);
 	}
 
 	stopTimer() {
-		//promise => number | undefined;
 		return this.execJS(`Swal.stopTimer()`);
 	}
 
 	resumeTimer() {
-		//: promise => number | undefined;
 		return this.execJS(`Swal.resumeTimer()`);
 	}
 
 	toggleTimer() {
-		//: promise => number | undefined;
 		return this.execJS(`Swal.toggleTimer()`);
 	}
 
 	isTimerRunning() {
-		//: promise => boolean | undefined;
 		//method should be looked into / revisited
 		return this.execJS(`Swal.isTimerRunning()`);
 	}
 
-	increaseTimer(
-		n //: promise => number | undefined;
-	) {
+	increaseTimer(n) {
 		return this.execJS(`Swal.increaseTimer(${n})`);
 	}
 
-	isValidParameter(
-		paramName //: promise => boolean;
-	) {
+	isValidParameter(paramName) {
 		return this.execJS(`Swal.isValidParameter('${paramName}')`);
 	}
 
-	isUpdatableParameter(
-		paramName //: promise => boolean;
-	) {
+	isUpdatableParameter(paramName) {
 		return this.execJS(`isUpdatableParameter('${paramName}')`);
 	}
 
@@ -285,14 +257,7 @@ module.exports = class Alert {
 			}
 		}
 
-		let ret = alert.fireFrameless(
-			swalOptions,
-			bwOptions,
-			true,
-			false,
-			sound
-		);
-		return ret;
+		return alert.fireFrameless(swalOptions, bwOptions, true, false, sound);
 	}
 
 	fire(swalOptions, bwOptions, parent, alwaysOnTop, draggable, sound) {
@@ -311,7 +276,7 @@ module.exports = class Alert {
 			webPreferences: {
 				nodeIntegration: true,
 				contextIsolation: false,
-				devTools: this.devTools === true ? true : false,
+				devTools: this.devTools === true,
 			},
 		};
 
@@ -407,8 +372,8 @@ module.exports = class Alert {
         ${Array.isArray(head) ? head.join("\n") : ""}
       </head>
       <body draggable="false" class="noselect" ${
-			draggable === true ? 'style="-webkit-app-region:drag"' : ""
-		}></body>
+				draggable === true ? 'style="-webkit-app-region:drag"' : ""
+			}></body>
       <script type="text/javascript">
       let _sound = ${JSON.stringify(sound)}
       let _config = ${JSON.stringify(swalOptions)}

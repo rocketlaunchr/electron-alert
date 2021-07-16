@@ -98,7 +98,6 @@ config.willClose = (modalElement) => {
 	ipcRenderer.send("${uid}willClose");
 };
 
-let ret = Swal.fire(config);
-ret.then(function(result) {
+Swal.fire(config).then(function(result) {
 	ipcRenderer.send("${uid}return-promise", result);
 });
