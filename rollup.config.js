@@ -15,7 +15,7 @@ export default [
 			terser({
 				ecma: 6,
 				mangle: {
-					reserved: ["uid", "sound", "config", "_sound", "_config"]
+					reserved: ["uid", "sound", "config"]
 				}
 			})
 		]
@@ -61,7 +61,7 @@ export default [
 			terser({
 				ecma: 6,
 				mangle: {
-					reserved: ["uid", "sound", "config", "_sound", "_config"]
+					reserved: ["uid", "sound", "config"]
 				}
 			})
 		]
@@ -84,7 +84,7 @@ export default [
 			terser({
 				ecma: 6,
 				mangle: {
-					reserved: ["uid", "sound", "config", "_sound", "_config"]
+					reserved: ["uid", "sound", "config"]
 				}
 			}),
 			stringReplace(

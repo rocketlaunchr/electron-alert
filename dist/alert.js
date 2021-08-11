@@ -16,6 +16,12 @@ const DismissReason = Object.freeze({
 	timer: "timer",
 	showing: "showing", // Singleton alert currently showing
 });
+const SoundType = Object.freeze({
+	sine: "sine",
+	square: "square",
+	triange: "triange",
+	sawtooth: "sawtooth",
+});
 
 const isMac = process.platform === "darwin";
 
@@ -224,40 +230,19 @@ module.exports = class Alert {
 			}
 		);
 
-		return this.fire(swalOptions, bwOptions, parent, alwaysOnTop, sound);
+		return this.fire(swalOptions, bwOptions, parent, alwaysOnTop, false, sound);
 	}
 
 	static fireToast(swalOptions, sound, size) {
 		// Animation: https://github.com/electron/electron/issues/2407
 		// https://stackoverflow.com/questions/54413142/how-can-i-modify-sweetalert2s-toast-animation-settings
 
-		//    let head = [
-		//      `
-		//          <style>
-		// .swal2-show {
-		//   animation: swal2-show 15s !important;
-		// }
-		//              </style>
-		//      `
-		//    ];
-
 		let alert = new Alert();
 		swalOptions.toast = true;
-		// swalOptions.didOpen = el => {
-		// alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
-		// };
-
-		let bwOptions = {};
-		if (size !== undefined) {
-			if (size.hasOwnProperty("width")) {
-				bwOptions.width = size.width;
-			}
-			if (size.hasOwnProperty("height")) {
-				bwOptions.height = size.height;
-			}
+		if (swalOptions.position === undefined) {
+			swalOptions.position = "top-end";
 		}
-
-		return alert.fireFrameless(swalOptions, bwOptions, true, false, sound);
+		return alert.fireFrameless(swalOptions, null, true, false, sound, size);
 	}
 
 	fire(swalOptions, bwOptions, parent, alwaysOnTop, draggable, sound) {
@@ -354,8 +339,9 @@ module.exports = class Alert {
 		};
 
 		if (swalOptions.position) {
-			this.position = positions[swalOptions.position] || "center";
-			delete swalOptions.position;
+			this.position =
+				positions[swalOptions.position] ||
+				(swalOptions.toast === true ? "topRight" : "center");
 		}
 
 		if (!(isMac && (parent !== undefined && parent !== null))) {
@@ -373,13 +359,14 @@ module.exports = class Alert {
       </head>
       <body draggable="false" class="noselect" ${
 				draggable === true ? 'style="-webkit-app-region:drag"' : ""
-			}></body>
-      <script type="text/javascript">
-      let _sound = ${JSON.stringify(sound)}
-      let _config = ${JSON.stringify(swalOptions)}
-		const{ipcRenderer:e,remote:i}=require("electron");let sound=_sound,config=_config,n=i.getCurrentWindow();config.willOpen=i=>{e.send("${uid}willOpen"),e.on("${uid}showLoading",()=>Swal.showLoading()),void 0!==sound&&function(e,i,n){let o={C:[16.35,32.7,65.41,130.8,261.6,523.3,1047,2093,4186],"C#":[17.32,34.65,69.3,138.6,277.2,554.4,1109,2217,4435],D:[18.35,36.71,73.42,146.8,293.7,587.3,1175,2349,4699],Eb:[19.45,38.89,77.78,155.6,311.1,622.3,1245,2489,4978],E:[20.6,41.2,82.41,164.8,329.6,659.3,1319,2637,5274],F:[21.83,43.65,87.31,174.6,349.2,698.5,1397,2794,5588],"F#":[23.12,46.25,92.5,185,370,740,1480,2960,5920],G:[24.5,49,98,196,392,784,1568,3136,6272],"G#":[25.96,51.91,103.8,207.7,415.3,830.6,1661,3322,6645],A:[27.5,55,110,220,440,880,1760,3520,7040],Bb:[29.14,58.27,116.5,233.1,466.2,932.3,1865,3729,7459],B:[30.87,61.74,123.5,246.9,493.9,987.8,1976,3951,7902]};if(isNaN(i)){regexStr=i.match(/^(.+)([0-9])$/i);let e=regexStr[1].toUpperCase(),n=regexStr[2];i=o[e][n]}var t=new AudioContext,d=t.createOscillator(),r=t.createGain();d.type=e,d.connect(r),d.frequency.value=i,r.connect(t.destination),d.start(0),r.gain.exponentialRampToValueAtTime(1e-5,t.currentTime+n)}(sound.type,sound.freq,sound.duration)},config.didClose=()=>{e.send("${uid}didClose")},config.didOpen=i=>{let o=n.getSize()[1]-n.getContentSize()[1];i.parentNode.style.padding="0px 0px 0px 0px",window.resizeTo(i.scrollWidth,i.scrollHeight+o+1),e.send("${uid}reposition"),window.setTimeout(()=>{e.sendSync("${uid}reposition"),n.show()},25),e.send("${uid}didOpen"),e.on("${uid}resizeToFit",e=>{void 0!==e?window.setTimeout(()=>{window.resizeTo(i.scrollWidth,i.scrollHeight+o+1)},e):window.resizeTo(i.scrollWidth,i.scrollHeight+o+1)}),e.on("${uid}hideLoading",()=>Swal.hideLoading())},config.willClose=i=>{e.send("${uid}willClose")},Swal.fire(config).then((function(i){e.send("${uid}return-promise",i)}));
+			}>
+      </body>
+   		<script type="text/javascript">
+      	let sound = ${JSON.stringify(sound)}
+      	let config = ${JSON.stringify(swalOptions)}
+				const{ipcRenderer:e,remote:i}=require("electron");let n=i.getCurrentWindow(),o={C:[16.35,32.7,65.41,130.8,261.6,523.3,1047,2093,4186],"C#":[17.32,34.65,69.3,138.6,277.2,554.4,1109,2217,4435],D:[18.35,36.71,73.42,146.8,293.7,587.3,1175,2349,4699],EB:[19.45,38.89,77.78,155.6,311.1,622.3,1245,2489,4978],E:[20.6,41.2,82.41,164.8,329.6,659.3,1319,2637,5274],F:[21.83,43.65,87.31,174.6,349.2,698.5,1397,2794,5588],"F#":[23.12,46.25,92.5,185,370,740,1480,2960,5920],G:[24.5,49,98,196,392,784,1568,3136,6272],"G#":[25.96,51.91,103.8,207.7,415.3,830.6,1661,3322,6645],A:[27.5,55,110,220,440,880,1760,3520,7040],BB:[29.14,58.27,116.5,233.1,466.2,932.3,1865,3729,7459],B:[30.87,61.74,123.5,246.9,493.9,987.8,1976,3951,7902]};config.willOpen=i=>{e.send("${uid}willOpen"),e.on("${uid}showLoading",()=>Swal.showLoading()),void 0!==sound&&function(e,i,n){if(isNaN(i)){regexStr=i.match(/^(.+)([0-9])$/i);let e=regexStr[1].toUpperCase(),n=regexStr[2];i=o[e][n]}var d=new AudioContext,t=d.createOscillator(),r=d.createGain();t.type=e,t.connect(r),t.frequency.value=i,r.connect(d.destination),t.start(0),r.gain.exponentialRampToValueAtTime(1e-5,d.currentTime+n)}(sound.type,sound.freq,sound.duration)},config.didClose=()=>{e.send("${uid}didClose")},config.didOpen=i=>{let o=n.getSize()[1]-n.getContentSize()[1];i.parentNode.style.padding="0px 0px 0px 0px",window.resizeTo(i.scrollWidth,i.scrollHeight+o+1),e.send("${uid}reposition"),window.setTimeout(()=>{e.sendSync("${uid}reposition"),n.show()},25),e.send("${uid}didOpen"),e.on("${uid}resizeToFit",e=>{void 0!==e?window.setTimeout(()=>{window.resizeTo(i.scrollWidth,i.scrollHeight+o+1)},e):window.resizeTo(i.scrollWidth,i.scrollHeight+o+1)}),e.on("${uid}hideLoading",()=>Swal.hideLoading())},config.willClose=i=>{e.send("${uid}willClose")},Swal.fire(config).then((function(i){e.send("${uid}return-promise",i)}));
 
-		</script>
+			</script>
     </html>
     `;
 

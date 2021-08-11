@@ -14,6 +14,12 @@ const DismissReason = Object.freeze({
 	timer: "timer",
 	showing: "showing", // Singleton alert currently showing
 });
+const SoundType = Object.freeze({
+	sine: "sine",
+	square: "square",
+	triange: "triange",
+	sawtooth: "sawtooth",
+});
 
 const isMac = process.platform === "darwin";
 
@@ -222,40 +228,19 @@ module.exports = class Alert {
 			}
 		);
 
-		return this.fire(swalOptions, bwOptions, parent, alwaysOnTop, sound);
+		return this.fire(swalOptions, bwOptions, parent, alwaysOnTop, false, sound);
 	}
 
 	static fireToast(swalOptions, sound, size) {
 		// Animation: https://github.com/electron/electron/issues/2407
 		// https://stackoverflow.com/questions/54413142/how-can-i-modify-sweetalert2s-toast-animation-settings
 
-		//    let head = [
-		//      `
-		//          <style>
-		// .swal2-show {
-		//   animation: swal2-show 15s !important;
-		// }
-		//              </style>
-		//      `
-		//    ];
-
 		let alert = new Alert();
 		swalOptions.toast = true;
-		// swalOptions.didOpen = el => {
-		// alert.browserWindow.webContents.send(`${alert.uid}resizeToFit`, 25);
-		// };
-
-		let bwOptions = {};
-		if (size !== undefined) {
-			if (size.hasOwnProperty("width")) {
-				bwOptions.width = size.width;
-			}
-			if (size.hasOwnProperty("height")) {
-				bwOptions.height = size.height;
-			}
+		if (swalOptions.position === undefined) {
+			swalOptions.position = "top-end";
 		}
-
-		return alert.fireFrameless(swalOptions, bwOptions, true, false, sound);
+		return alert.fireFrameless(swalOptions, null, true, false, sound, size);
 	}
 
 	fire(swalOptions, bwOptions, parent, alwaysOnTop, draggable, sound) {
@@ -352,8 +337,9 @@ module.exports = class Alert {
 		};
 
 		if (swalOptions.position) {
-			this.position = positions[swalOptions.position] || "center";
-			delete swalOptions.position;
+			this.position =
+				positions[swalOptions.position] ||
+				(swalOptions.toast === true ? "topRight" : "center");
 		}
 
 		if (!(isMac && (parent !== undefined && parent !== null))) {
@@ -370,12 +356,13 @@ module.exports = class Alert {
       </head>
       <body draggable="false" class="noselect" ${
 				draggable === true ? 'style="-webkit-app-region:drag"' : ""
-			}></body>
-      <script type="text/javascript">
-      let _sound = ${JSON.stringify(sound)}
-      let _config = ${JSON.stringify(swalOptions)}
-		<@insert-renderer@>
-		</script>
+			}>
+      </body>
+   		<script type="text/javascript">
+      	let sound = ${JSON.stringify(sound)}
+      	let config = ${JSON.stringify(swalOptions)}
+				<@insert-renderer@>
+			</script>
     </html>
     `;
 
