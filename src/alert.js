@@ -12,7 +12,7 @@ const DismissReason = Object.freeze({
 	close: "close",
 	esc: "esc",
 	timer: "timer",
-	showing: "showing", // Singleton alert currently showing
+	showing: "showing", // alert with the same singleton id is currently showing
 });
 const SoundType = Object.freeze({
 	sine: "sine",
@@ -33,6 +33,10 @@ module.exports = class Alert {
 		this.browserWindow = null;
 		this.position = "center";
 		this._isVisible = false;
+	}
+
+	static get SoundType() {
+		return SoundType;
 	}
 
 	static get DismissReason() {
