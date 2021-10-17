@@ -409,6 +409,9 @@ module.exports = class Alert {
 			if (!(isMac && (parent !== undefined && parent !== null))) {
 				new Positioner(this.browserWindow).move(this.position);
 			}
+			if (arg === "show") {
+				this.browserWindow.show();
+			}
 			event.returnValue = "repositioned";
 		});
 

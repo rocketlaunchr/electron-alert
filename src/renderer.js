@@ -1,8 +1,6 @@
 // Copyright 2019-21 PJ Engineering and Business Solutions Pty. Ltd. All rights reserved.
 
-const { ipcRenderer, remote } = require("electron");
-
-let win = remote.getCurrentWindow();
+const { ipcRenderer } = require("electron");
 
 let std = {
 	C: [16.35, 32.7, 65.41, 130.8, 261.6, 523.3, 1047, 2093, 4186],
@@ -57,8 +55,8 @@ config.didClose = () => {
 };
 
 config.didOpen = (modalElement) => {
-	let titlebarHeight = win.getSize()[1] - win.getContentSize()[1];
 	modalElement.parentNode.style.padding = "0px 0px 0px 0px";
+	let titlebarHeight = window.outerHeight - window.innerHeight;
 	window.resizeTo(
 		modalElement.scrollWidth,
 		modalElement.scrollHeight + titlebarHeight + 1
@@ -67,8 +65,7 @@ config.didOpen = (modalElement) => {
 	// Prevent occasional flicker when shown for the first time
 	ipcRenderer.send("${uid}reposition");
 	window.setTimeout(() => {
-		ipcRenderer.sendSync("${uid}reposition");
-		win.show();
+		ipcRenderer.sendSync("${uid}reposition", "show");
 	}, 25);
 
 	ipcRenderer.send("${uid}didOpen");
