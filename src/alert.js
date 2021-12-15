@@ -353,6 +353,7 @@ module.exports = class Alert {
 		let html = String.raw`
     <html>
       <head>
+      	<meta charset="utf-8">
 		<script type="text/javascript"><@insert-swal-lib@></script>
 		<style>.noselect{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none;-webkit-app-region:no-drag}.no-drag{-webkit-app-region:no-drag}.border-radius-0{border-radius:0}</style>
         <style>.noscrollbar{overflow-y: hidden !important;}</style>
