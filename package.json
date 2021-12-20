@@ -22,7 +22,7 @@
   "devDependencies": {
     "replace-in-file": "^4.3.1",
     "rollup-plugin-terser": "^5.3.1",
-    "sweetalert2": "^11.1.9"
+    "sweetalert2": "^11.3.0"
   },
   "dependencies": {
     "clean-stack": "^2.2.0",

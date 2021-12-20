@@ -1,4 +1,4 @@
-// Copyright 2019-21 PJ Engineering and Business Solutions Pty. Ltd. All rights reserved.
+// Copyright 2019-22 PJ Engineering and Business Solutions Pty. Ltd. All rights reserved.
 
 const { ipcMain, globalShortcut, app, BrowserWindow } = require("electron");
 const tempWrite = require("temp-write");

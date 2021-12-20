@@ -26,6 +26,7 @@
 -   Exception handling alert
 -   Sounds
 -   SweetAlert2-esque API\* ([v11](https://sweetalert2.github.io/v11.html))
+-   Consistent UI across all platforms
 
 ### Documentation
 
@@ -59,4 +60,4 @@ If you use ElectronAlert in your project, add it here.
 
 MIT license. Refer to `LICENSE` file for more details.
 
-**© 2019-21 PJ Engineering and Business Solutions Pty. Ltd.**
+**© 2019-22 PJ Engineering and Business Solutions Pty. Ltd.**
